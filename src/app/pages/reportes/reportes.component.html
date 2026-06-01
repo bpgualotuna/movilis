@@ -1,0 +1,115 @@
+<div class="reportes-container">
+  <!-- CABECERA -->
+  <header class="module-header">
+    <div class="header-titles">
+      <h1>Módulo de Reportes y Estadísticas</h1>
+      <p>Indicadores de rendimiento, cobranza y distribución demográfica de alumnos para la toma de decisiones directivas.</p>
+    </div>
+  </header>
+
+  <!-- SKELETON LOADER -->
+  @if (isLoading) {
+    <div class="loading-stats">
+      <div class="spinner"></div>
+      <p>Generando reportes estadísticos...</p>
+    </div>
+  } @else {
+    <!-- GRIDS DE KPIs -->
+    <div class="kpi-grid">
+      @for (card of kpis; track card.title) {
+        <div class="kpi-card" [attr.data-kpi]="card.icon">
+          <div class="kpi-header">
+            <span class="kpi-title">{{ card.title }}</span>
+            <div class="kpi-icon-wrapper">
+              @if (card.icon === 'dollar') {
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              } @else if (card.icon === 'users') {
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              } @else if (card.icon === 'percent') {
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" x2="5" y1="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+              } @else {
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+              }
+            </div>
+          </div>
+          <div class="kpi-value">{{ card.value }}</div>
+          <div class="kpi-footer">
+            <span class="kpi-trend positive">{{ card.change }}</span>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- SECCIÓN DE GRÁFICOS EN FILA -->
+    <div class="charts-grid">
+      <!-- TARJETA 1: INGRESOS POR CARRERA -->
+      <section class="chart-card">
+        <h2>Distribución de Ingresos por Carrera</h2>
+        <p class="chart-description">Representa la recaudación mensual total correspondiente a matrícula y pensiones según la especialidad académica.</p>
+
+        <div class="progress-bar-list">
+          @for (item of ingresosCarrera; track item.carrera) {
+            <div class="progress-item">
+              <div class="progress-item-header">
+                <span class="item-name">{{ item.carrera }}</span>
+                <span class="item-value">{{ item.monto | currency }} <small>({{ item.porcentaje }}%)</small></span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" [style.width.%]="item.porcentaje" [style.background-color]="item.color"></div>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+
+      <!-- TARJETA 2: TASA DE MOROSIDAD -->
+      <section class="chart-card">
+        <h2>Tasa de Morosidad por Especialidad</h2>
+        <p class="chart-description">Porcentaje de estudiantes con pagos pendientes o cuotas vencidas y el monto de cartera vencida estimada.</p>
+
+        <div class="progress-bar-list">
+          @for (item of morosidadCarrera; track item.carrera) {
+            <div class="progress-item">
+              <div class="progress-item-header">
+                <span class="item-name">{{ item.carrera }}</span>
+                <span class="item-value">{{ item.montoPendiente | currency }} <small class="danger-text">({{ item.morosidad }}% morosidad)</small></span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill danger" [style.width.%]="item.morosidad * 10" [style.background-color]="item.color"></div>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    </div>
+
+    <!-- GRÁFICO DE BARRAS DE CRECIMIENTO DE ALUMNOS (Full-Width) -->
+    <section class="chart-card full-width">
+      <h2>Crecimiento de Alumnos Inscritos (Últimos 5 Meses)</h2>
+      <p class="chart-description">Evolución mensual histórica de la cantidad total de estudiantes activos matriculados en todas las carreras del instituto.</p>
+
+      <div class="bar-chart-container">
+        <div class="bar-chart-y-axis">
+          <span>{{ maxAlumnos }}</span>
+          <span>{{ maxAlumnos / 2 | number:'1.0-0' }}</span>
+          <span>0</span>
+        </div>
+
+        <div class="bar-chart-plot">
+          @for (month of crecimiento; track month.mes) {
+            <div class="bar-column">
+              <div class="bar-wrapper">
+                <div class="bar-value-label">{{ month.alumnos }}</div>
+                <div 
+                  class="bar-rect" 
+                  [style.height.%]="getBarHeightPercentage(month.alumnos)"
+                ></div>
+              </div>
+              <div class="bar-label-month">{{ month.mes }}</div>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+  }
+</div>

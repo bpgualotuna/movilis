@@ -1,0 +1,431 @@
+<div class="step-section" [formGroup]="formGroup">
+  <h2 class="step-title">
+    <span class="step-icon-large" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+    </span>
+    Datos Personales
+  </h2>
+  
+  <div class="form-grid">
+    <div class="form-group">
+      <label>Primer Apellido <span class="required">*</span></label>
+      <input
+        type="text"
+        formControlName="primerApellido"
+        class="form-control"
+        style="text-transform: uppercase"
+        maxlength="60"
+        [class.error]="hasError('primerApellido')"
+        placeholder="Primer apellido"
+      />
+      <small class="error-message" *ngIf="hasError('primerApellido')">
+        {{ getErrorMessage('primerApellido') }}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Segundo Apellido (o "NA") <span class="required">*</span></label>
+      <input
+        type="text"
+        formControlName="segundoApellido"
+        style="text-transform: uppercase"
+        class="form-control"
+        maxlength="60"
+        [class.error]="hasError('segundoApellido')"
+        placeholder="Segundo apellido o NA"
+      />
+      <small class="error-message" *ngIf="hasError('segundoApellido')">
+        {{ getErrorMessage('segundoApellido') }}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Primer Nombre <span class="required">*</span></label>
+      <input
+        type="text"
+        formControlName="primerNombre"
+        style="text-transform: uppercase"
+        class="form-control"
+        maxlength="60"
+        [class.error]="hasError('primerNombre')"
+        placeholder="Primer nombre"
+      />
+      <small class="error-message" *ngIf="hasError('primerNombre')">
+        {{ getErrorMessage('primerNombre') }}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Segundo Nombre (o "NA") <span class="required">*</span></label>
+      <input
+        type="text"
+        formControlName="segundoNombre"
+        style="text-transform: uppercase"
+        class="form-control"
+        maxlength="60"
+        [class.error]="hasError('segundoNombre')"
+        placeholder="Segundo nombre o NA"
+      />
+      <small class="error-message" *ngIf="hasError('segundoNombre')">
+        {{ getErrorMessage('segundoNombre') }}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Correo Electrónico <span class="required">*</span></label>
+      <input
+        type="email"
+        formControlName="correoElectronico"
+        class="form-control"
+        maxlength="30"
+        [class.error]="hasError('correoElectronico')"
+        placeholder="correo@ejemplo.com"
+      />
+      <small class="error-message" *ngIf="hasError('correoElectronico')">{{ getErrorMessage('correoElectronico') }}</small>
+    </div>
+
+    <div class="form-group">
+      <label>Número de Celular <span class="required">*</span></label>
+      <input
+        type="tel"
+        formControlName="numeroCelular"
+        class="form-control"
+        maxlength="10"
+        minlength="10"
+        [class.error]="hasError('numeroCelular')"
+        placeholder="0987654321"
+      />
+      <small class="error-message" *ngIf="hasError('numeroCelular')">{{ getErrorMessage('numeroCelular') }}</small>
+      <small class="hint">10 dígitos</small>
+    </div>
+
+    <div class="form-group">
+      <label>Sexo <span class="required">*</span></label>
+      <div class="select-wrapper">
+        <select formControlName="sexoId" class="form-control select-enhanced" [class.error]="hasError('sexoId')">
+          <option value="">Seleccione el sexo</option>
+          @if (enums?.Sexo) {
+            @for (item of enums?.Sexo; track $index) {
+              <option [value]="item">{{ getEnumLabel(item) }}</option>
+            }
+          }
+        </select>
+      </div>
+      <small class="error-message" *ngIf="hasError('sexoId')">
+        {{ getErrorMessage('sexoId') }}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Género <span class="required">*</span></label>
+      <div class="select-wrapper">
+        <select formControlName="generoId" class="form-control select-enhanced" [class.error]="hasError('generoId')">
+          <option value="">Seleccione el género</option>
+          @if (enums?.Genero) {
+            @for (item of enums?.Genero; track $index) {
+              <option [value]="item">{{ getEnumLabel(item) }}</option>
+            }
+          }
+        </select>
+      </div>
+      <small class="error-message" *ngIf="hasError('generoId')">
+        {{ getErrorMessage('generoId') }}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Estado Civil <span class="required">*</span></label>
+      <div class="select-wrapper">
+        <select formControlName="estadocivilId" class="form-control select-enhanced" [class.error]="hasError('estadocivilId')">
+          <option value="">Seleccione el estado civil</option>
+          @if (enums?.EstadoCivil) {
+            @for (item of enums?.EstadoCivil; track $index) {
+              <option [value]="item">{{ getEnumLabel(item) }}</option>
+            }
+          }
+        </select>
+      </div>
+      <small class="error-message" *ngIf="hasError('estadocivilId')">
+        {{ getErrorMessage('estadocivilId') }}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Etnia <span class="required">*</span></label>
+      <div class="select-wrapper">
+        <select formControlName="etniaId" class="form-control select-enhanced" [class.error]="hasError('etniaId')">
+          <option value="">Seleccione la etnia</option>
+          @if (enums?.Etnia) {
+            @for (item of enums?.Etnia; track $index) {
+              <option [value]="item">{{ getEnumLabel(item) }}</option>
+            }
+          }
+        </select>
+      </div>
+      <small class="error-message" *ngIf="hasError('etniaId')">
+        {{ getErrorMessage('etniaId') }}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>
+        Pueblo Nacionalidad
+        <span class="required" *ngIf="isEtniaIndigena()">*</span>
+      </label>
+      <div class="select-wrapper">
+        <select 
+          formControlName="pueblonacionalidadId" 
+          class="form-control select-enhanced" 
+          [class.error]="hasError('pueblonacionalidadId')"
+          [disabled]="!isEtniaIndigena()">
+          <option value="">Seleccione el pueblo nacionalidad</option>
+          @if (enums?.PuebloNacionalidad) {
+            @for (item of enums?.PuebloNacionalidad; track item.id) {
+              <option [value]="item.id">{{ item.nombre }}</option>
+            }
+          }
+        </select>
+      </div>
+      <small class="error-message" *ngIf="hasError('pueblonacionalidadId')">
+        {{ getErrorMessage('pueblonacionalidadId') }}
+      </small>
+      <small class="hint" *ngIf="!isEtniaIndigena()">
+        Solo disponible si selecciona Etnia "Indígena"
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Tipo de Sangre <span class="required">*</span></label>
+      <div class="select-wrapper">
+        <select formControlName="tipoSangre" class="form-control select-enhanced" [class.error]="hasError('tipoSangre')">
+          <option value="">Seleccione el tipo de sangre</option>
+          @if (enums?.TipoSangre) {
+            @for (item of enums?.TipoSangre; track $index) {
+              <option [value]="item">{{ getEnumLabel(item) }}</option>
+            }
+          }
+        </select>
+      </div>
+      <small class="error-message" *ngIf="hasError('tipoSangre')">
+        {{ getErrorMessage('tipoSangre') }}
+      </small>
+    </div>
+
+  </div>
+
+  <!-- Documentos requeridos -->
+  <div class="docs-section">
+    <div class="docs-title">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+      </svg>
+      Documentos Requeridos
+    </div>
+    <p class="docs-hint">Sube los documentos en formato PDF, JPG o PNG según corresponda.</p>
+
+    <div class="docs-grid">
+
+      <!-- Copia de Cédula -->
+      <div class="doc-upload-card">
+        <div class="doc-upload-header">
+          <span class="doc-upload-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="5" width="20" height="14" rx="2"/>
+              <line x1="2" y1="10" x2="22" y2="10"/>
+            </svg>
+          </span>
+          <span class="doc-upload-label">
+            Copia de Cédula de Identidad
+            <span class="doc-required"> (anverso y reverso)</span>
+          </span>
+        </div>
+        <div class="doc-upload-body">
+          @if (formGroup.get('copiaCedula')?.value && 
+               formGroup.get('copiaCedula')?.value !== 'NA' &&
+               formGroup.get('copiaCedula')?.value.startsWith('http')) {
+            <div class="doc-uploaded">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <a [href]="formGroup.get('copiaCedula')?.value" target="_blank" class="doc-link">Ver archivo</a>
+              <button type="button" class="doc-remove-btn" (click)="removeCopiaCedula(copiaCedulaInput)" title="Eliminar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+            </div>
+          }
+          <label class="doc-file-label" [class.uploading]="copiaCedulaUploading">
+            <input type="file" #copiaCedulaInput (change)="onCopiaCedulaFileSelected($event)" accept="application/pdf,image/jpeg,image/png,image/webp" [disabled]="copiaCedulaUploading" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            {{ copiaCedulaUploading ? 'Subiendo...' : 'Seleccionar archivo' }}
+          </label>
+          @if (copiaCedulaError) {
+            <span class="doc-msg doc-msg-err">{{ copiaCedulaError }}</span>
+          }
+          <span class="doc-msg">PDF, JPG o PNG</span>
+        </div>
+      </div>
+
+      <!-- Copia de Papeleta de Votación -->
+      <div class="doc-upload-card">
+        <div class="doc-upload-header">
+          <span class="doc-upload-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 11l3 3L22 4"/>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+          </span>
+          <span class="doc-upload-label">
+            Copia de Papeleta de Votación
+          </span>
+        </div>
+        <div class="doc-upload-body">
+          @if (formGroup.get('copiaPapeleta')?.value && 
+               formGroup.get('copiaPapeleta')?.value !== 'NA' &&
+               formGroup.get('copiaPapeleta')?.value.startsWith('http')) {
+            <div class="doc-uploaded">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <a [href]="formGroup.get('copiaPapeleta')?.value" target="_blank" class="doc-link">Ver archivo</a>
+              <button type="button" class="doc-remove-btn" (click)="removeCopiaPapeleta(copiaPapeletaInput)" title="Eliminar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+            </div>
+          }
+          <label class="doc-file-label" [class.uploading]="copiaPapeletaUploading">
+            <input type="file" #copiaPapeletaInput (change)="onCopiaPapeletaFileSelected($event)" accept="application/pdf,image/jpeg,image/png,image/webp" [disabled]="copiaPapeletaUploading" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            {{ copiaPapeletaUploading ? 'Subiendo...' : 'Seleccionar archivo' }}
+          </label>
+          @if (copiaPapeletaError) {
+            <span class="doc-msg doc-msg-err">{{ copiaPapeletaError }}</span>
+          }
+          <span class="doc-msg">PDF, JPG o PNG</span>
+        </div>
+      </div>
+
+      <!-- Copia del Título de Bachiller -->
+      <div class="doc-upload-card">
+        <div class="doc-upload-header">
+          <span class="doc-upload-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+          </span>
+          <span class="doc-upload-label">
+            Copia del Título de Bachiller
+          </span>
+        </div>
+        <div class="doc-upload-body">
+          @if (formGroup.get('tituloBachiller')?.value && 
+               formGroup.get('tituloBachiller')?.value !== 'NA' &&
+               formGroup.get('tituloBachiller')?.value.startsWith('http')) {
+            <div class="doc-uploaded">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <a [href]="formGroup.get('tituloBachiller')?.value" target="_blank" class="doc-link">Ver archivo</a>
+              <button type="button" class="doc-remove-btn" (click)="removeTituloBachiller(tituloBachillerInput)" title="Eliminar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+            </div>
+          }
+          <label class="doc-file-label" [class.uploading]="tituloBachillerUploading">
+            <input type="file" #tituloBachillerInput (change)="onTituloBachillerFileSelected($event)" accept="application/pdf,image/jpeg,image/png,image/webp" [disabled]="tituloBachillerUploading" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            {{ tituloBachillerUploading ? 'Subiendo...' : 'Seleccionar archivo' }}
+          </label>
+          @if (tituloBachillerError) {
+            <span class="doc-msg doc-msg-err">{{ tituloBachillerError }}</span>
+          }
+          <span class="doc-msg">PDF, JPG o PNG</span>
+        </div>
+      </div>
+
+      <!-- Certificado de Registro del Título de Bachiller -->
+      <div class="doc-upload-card">
+        <div class="doc-upload-header">
+          <span class="doc-upload-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+          </span>
+          <span class="doc-upload-label">
+            Certificado de Registro del Título de Bachiller
+          </span>
+        </div>
+        <div class="doc-upload-body">
+          @if (formGroup.get('certificadoRegistroTitulo')?.value && 
+               formGroup.get('certificadoRegistroTitulo')?.value !== 'NA' &&
+               formGroup.get('certificadoRegistroTitulo')?.value.startsWith('http')) {
+            <div class="doc-uploaded">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <a [href]="formGroup.get('certificadoRegistroTitulo')?.value" target="_blank" class="doc-link">Ver archivo</a>
+              <button type="button" class="doc-remove-btn" (click)="removeCertificadoTitulo(certificadoTituloInput)" title="Eliminar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+            </div>
+          }
+          <label class="doc-file-label" [class.uploading]="certificadoTituloUploading">
+            <input type="file" #certificadoTituloInput (change)="onCertificadoTituloFileSelected($event)" accept="application/pdf,image/jpeg,image/png,image/webp" [disabled]="certificadoTituloUploading" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            {{ certificadoTituloUploading ? 'Subiendo...' : 'Seleccionar archivo' }}
+          </label>
+          @if (certificadoTituloError) {
+            <span class="doc-msg doc-msg-err">{{ certificadoTituloError }}</span>
+          }
+          <span class="doc-msg">PDF, JPG o PNG</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Justificación por retraso en documentos -->
+    <div class="form-group docs-justificacion">
+      <label for="justificacionRetrasoDocumentos">Descripción / Justificación por retraso en documentos</label>
+      <textarea
+        id="justificacionRetrasoDocumentos"
+        formControlName="justificacionRetrasoDocumentos"
+        class="form-control"
+        rows="3"
+        maxlength="1000"
+        placeholder="Si no puede entregar algún documento pronto, explique el motivo aquí..."
+      ></textarea>
+    </div>
+
+  </div>
+</div>

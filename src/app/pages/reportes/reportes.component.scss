@@ -1,0 +1,411 @@
+$brand-purple: #881e80;
+$brand-purple-dark: #6b1866;
+$brand-purple-deep: #4d1149;
+$brand-yellow: #f9eb1d;
+$brand-yellow-dark: #e6d91a;
+$surface: #5a1555;
+$text-soft: #f5f0f5;
+$r: #ef4444;
+
+.reportes-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* ==========================================================================
+   HEADER STYLE
+   ========================================================================== */
+.module-header {
+  border-bottom: 3px solid $brand-yellow;
+  padding-bottom: 20px;
+
+  h1 {
+    color: $brand-yellow;
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -0.5px;
+  }
+
+  p {
+    color: var(--text-soft);
+    font-size: 1rem;
+    margin: 8px 0 0 0;
+    opacity: 0.9;
+  }
+}
+
+/* ==========================================================================
+   KPI GRID & CARDS (Visual consistency with Home)
+   ========================================================================== */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.kpi-card {
+  background: linear-gradient(135deg, rgba($brand-purple-deep, 0.6) 0%, rgba($surface, 0.8) 100%);
+  border: 2px solid $surface;
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: transparent;
+  }
+
+  &[data-kpi="dollar"]::before { background: $brand-yellow; }
+  &[data-kpi="users"]::before { background: #3b82f6; }
+  &[data-kpi="percent"]::before { background: #10b981; }
+  &[data-kpi="alert-triangle"]::before { background: #ef4444; }
+
+  .kpi-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .kpi-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-soft);
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .kpi-icon-wrapper {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: rgba($brand-purple, 0.3);
+    color: $brand-yellow;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba($brand-purple, 0.5);
+
+    svg {
+      display: block;
+    }
+  }
+
+  .kpi-value {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.1;
+    margin: 5px 0;
+  }
+
+  .kpi-footer {
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .kpi-trend {
+    display: inline-flex;
+    align-items: center;
+
+    &.positive {
+      color: #a7f3d0;
+    }
+  }
+}
+
+.loading-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  background: var(--bg-card);
+  border-radius: 16px;
+  border: 2px solid $surface;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  gap: 20px;
+
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid $surface;
+    border-top-color: $brand-yellow;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  p {
+    color: var(--text-soft);
+    font-size: 1.1rem;
+    margin: 0;
+  }
+}
+
+/* ==========================================================================
+   CHARTS GRID LAYOUT
+   ========================================================================== */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+.chart-card {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 30px;
+  border: 2px solid $surface;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  @media (max-width: 640px) {
+    padding: 20px;
+  }
+
+  &.full-width {
+    grid-column: 1 / -1;
+  }
+
+  h2 {
+    color: $brand-yellow;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+    padding-bottom: 12px;
+    border-bottom: 2px solid $surface;
+  }
+
+  .chart-description {
+    font-size: 0.85rem;
+    color: var(--text-soft);
+    opacity: 0.8;
+    margin: 0 0 10px 0;
+    line-height: 1.5;
+  }
+}
+
+/* ==========================================================================
+   PROGRESS BARS LIST STYLE (Carrera distribution & Morosity)
+   ========================================================================== */
+.progress-bar-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.progress-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .progress-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+
+    .item-name {
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .item-value {
+      font-weight: 600;
+      color: var(--text-soft);
+
+      small {
+        opacity: 0.8;
+        font-weight: 500;
+      }
+
+      .danger-text {
+        color: #fca5a5;
+        font-weight: 700;
+      }
+    }
+  }
+
+  .progress-track {
+    width: 100%;
+    height: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 99px;
+    border: 1px solid $surface;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.1) inset;
+
+    &.danger {
+      background: linear-gradient(90deg, #fca5a5 0%, #ef4444 100%) !important;
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+    }
+  }
+}
+
+/* ==========================================================================
+   PURE CSS BAR CHART (Crecimiento de Alumnos)
+   ========================================================================== */
+.bar-chart-container {
+  display: flex;
+  margin-top: 30px;
+  height: 280px;
+  position: relative;
+  border-bottom: 2px solid $surface;
+  padding-left: 50px; /* Dejar espacio para el eje Y */
+  box-sizing: border-box;
+
+  @media (max-width: 480px) {
+    height: 240px;
+    padding-left: 35px;
+  }
+}
+
+.bar-chart-y-axis {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  color: var(--text-soft);
+  opacity: 0.6;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding-bottom: 30px; /* Alineado con el Y-axis real */
+  box-sizing: border-box;
+
+  @media (max-width: 480px) {
+    width: 30px;
+    font-size: 0.7rem;
+  }
+}
+
+.bar-chart-plot {
+  flex: 1;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  height: 100%;
+  padding-bottom: 30px; /* Espacio para las etiquetas X */
+  box-sizing: border-box;
+}
+
+.bar-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  max-width: 80px;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.bar-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+  height: 100%;
+
+  &:hover {
+    .bar-rect {
+      transform: scaleX(1.05);
+      background: linear-gradient(to top, $brand-purple 0%, $brand-yellow 100%);
+      box-shadow: 0 0 15px rgba(249, 235, 29, 0.4);
+    }
+
+    .bar-value-label {
+      opacity: 1;
+      transform: translateY(-4px) scale(1.1);
+      color: $brand-yellow;
+    }
+  }
+}
+
+.bar-value-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-soft);
+  margin-bottom: 6px;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.bar-rect {
+  width: 36px;
+  background: linear-gradient(to top, $brand-purple-deep 0%, $brand-purple 100%);
+  border-radius: 6px 6px 0 0;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid $surface;
+  border-bottom: none;
+
+  @media (max-width: 480px) {
+    width: 24px;
+  }
+}
+
+.bar-label-month {
+  position: absolute;
+  bottom: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-soft);
+  opacity: 0.8;
+  height: 20px;
+  line-height: 20px;
+}
+
+/* ==========================================================================
+   ANIMATIONS
+   ========================================================================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

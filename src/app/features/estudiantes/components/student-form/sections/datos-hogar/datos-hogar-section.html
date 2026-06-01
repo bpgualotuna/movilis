@@ -1,0 +1,648 @@
+<div class="step-section" [formGroup]="formGroup">
+  <h2 class="step-title">
+    <span class="step-icon-large" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+    </span>
+    Datos del Hogar
+  </h2>
+  
+  <div class="form-grid">
+    <div class="form-group">
+      <label>Nivel de Formación del Padre <span class="required">*</span></label>
+      <div class="select-wrapper">
+        <select formControlName="nivelFormacionPadre" class="form-control select-enhanced" [class.error]="hasError('nivelFormacionPadre')">
+          <option value="">Seleccione el nivel de formación</option>
+          @if (enums?.NivelFormacionPadre) {
+            @for (item of enums?.NivelFormacionPadre; track $index) {
+              <option [value]="item">{{ getEnumLabel(item) }}</option>
+            }
+          }
+        </select>
+      </div>
+      <small class="error-message" *ngIf="hasError('nivelFormacionPadre')">
+        {{ getErrorMessage('nivelFormacionPadre') }}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Nivel de Formación de la Madre <span class="required">*</span></label>
+      <div class="select-wrapper">
+        <select formControlName="nivelFormacionMadre" class="form-control select-enhanced" [class.error]="hasError('nivelFormacionMadre')">
+          <option value="">Seleccione el nivel de formación</option>
+          @if (enums?.NivelFormacionMadre) {
+            @for (item of enums?.NivelFormacionMadre; track $index) {
+              <option [value]="item">{{ getEnumLabel(item) }}</option>
+            }
+          }
+        </select>
+      </div>
+      <small class="error-message" *ngIf="hasError('nivelFormacionMadre')">
+        {{ getErrorMessage('nivelFormacionMadre') }}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Ingreso Total del Hogar <span class="required">*</span></label>
+      <input
+        type="number"
+        formControlName="ingresoTotalHogar"
+        class="form-control"
+        [class.error]="hasError('ingresoTotalHogar')"
+        placeholder="Ingrese el ingreso total o se calculará automáticamente"
+        step="0.01"
+        min="0"
+      />
+      <small class="error-message" *ngIf="hasError('ingresoTotalHogar')">
+        {{ getErrorMessage('ingresoTotalHogar') }}
+      </small>
+      <small class="hint">Puede ingresarlo manualmente o se calculará automáticamente desde la sección de Ingresos Familiares (Paso 12)</small>
+    </div>
+
+    <div class="form-group">
+      <label>Cantidad de Miembros del Hogar <span class="required">*</span></label>
+      <input
+        type="number"
+        formControlName="cantidadMiembrosHogar"
+        class="form-control"
+        [class.error]="hasError('cantidadMiembrosHogar')"
+        placeholder="Número de miembros"
+        min="1"
+      />
+      <small class="error-message" *ngIf="hasError('cantidadMiembrosHogar')">
+        {{ getErrorMessage('cantidadMiembrosHogar') }}
+      </small>
+    </div>
+
+    <!-- Servicios Disponibles -->
+    <fieldset disabled class="disabled-section">
+    <div class="form-group full-width">
+      <label>Servicios disponibles en la vivienda</label>
+      <div class="checkbox-group">
+        @for (servicio of serviciosDisponiblesOpciones; track servicio.value) {
+          <label class="checkbox-label">
+            <input 
+              type="checkbox" 
+              [checked]="isServicioSelected(servicio.value)"
+              (change)="toggleServicio(servicio.value)"
+            />
+            <span>{{ servicio.label }}</span>
+          </label>
+        }
+      </div>
+    </div>
+
+    <!-- Dinámica Familiar -->
+    <div class="form-group full-width">
+      <label>¿Cómo es la dinámica familiar en su hogar? (Cómo se relacionan, se comunican y se apoyan entre los miembros de la familia)</label>
+      <textarea
+        formControlName="dinamicaFamiliar"
+        class="form-control"
+        [class.error]="hasError('dinamicaFamiliar')"
+        placeholder="Describa la dinámica familiar"
+        rows="4"
+        maxlength="500"
+      ></textarea>
+      <small class="error-message" *ngIf="hasError('dinamicaFamiliar')">
+        {{ getErrorMessage('dinamicaFamiliar') }}
+      </small>
+    </div>
+
+    <!-- Violencia Familiar -->
+    <div class="form-group">
+      <label>¿En tu contexto familiar se han presentado conductas violentas?</label>
+      <div class="select-wrapper">
+        <select formControlName="violenciaFamiliar" class="form-control select-enhanced" [class.error]="hasError('violenciaFamiliar')">
+          <option value="">Seleccione</option>
+          <option value="SI">Sí</option>
+          <option value="NO">No</option>
+        </select>
+      </div>
+      <small class="error-message" *ngIf="hasError('violenciaFamiliar')">
+        {{ getErrorMessage('violenciaFamiliar') }}
+      </small>
+    </div>
+
+    <!-- Tipo de Violencia (condicional) -->
+    <div class="form-group full-width" *ngIf="formGroup.get('violenciaFamiliar')?.value === 'SI'">
+      <label>Si tu respuesta es Sí, elige el tipo de violencia:</label>
+      <div class="checkbox-group">
+        @for (tipo of tipoViolenciaOpciones; track tipo.value) {
+          <label class="checkbox-label">
+            <input 
+              type="checkbox" 
+              [checked]="isTipoViolenciaSelected(tipo.value)"
+              (change)="toggleTipoViolencia(tipo.value)"
+            />
+            <span>{{ tipo.label }}</span>
+          </label>
+        }
+      </div>
+    </div>
+
+    <!-- ¿El estudiante es cabeza familiar? -->
+    <div class="form-group">
+      <label>¿El estudiante es la cabeza familiar?</label>
+      <div class="select-wrapper">
+        <select formControlName="estudianteCabezaFamiliar" class="form-control select-enhanced" [class.error]="hasError('estudianteCabezaFamiliar')">
+          <option value="">Seleccione</option>
+          <option value="SI">Sí</option>
+          <option value="NO">No</option>
+        </select>
+      </div>
+      <small class="error-message" *ngIf="hasError('estudianteCabezaFamiliar')">
+        {{ getErrorMessage('estudianteCabezaFamiliar') }}
+      </small>
+    </div>
+    </fieldset>
+  </div>
+
+  <!-- Sección de Egresos Familiares -->
+  <fieldset disabled class="disabled-section">
+  <div class="egresos-section">
+    <h3 class="subsection-title">Egresos Familiares del Grupo Familiar</h3>
+    <p class="subsection-description">Colocar cuánto gasta aproximadamente por cada uno de los ítems:</p>
+    
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Vivienda (arriendo, cuota de préstamo)</label>
+        <input
+          type="number"
+          formControlName="egresoVivienda"
+          class="form-control"
+          [class.error]="hasError('egresoVivienda')"
+          placeholder="0.00"
+          min="0"
+          step="0.01"
+        />
+        <small class="error-message" *ngIf="hasError('egresoVivienda')">
+          {{ getErrorMessage('egresoVivienda') }}
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>Alimentación (compras de supermercado, mercado, comida fuera del hogar, refrigerios, colaciones)</label>
+        <input
+          type="number"
+          formControlName="egresoAlimentacion"
+          class="form-control"
+          [class.error]="hasError('egresoAlimentacion')"
+          placeholder="0.00"
+          min="0"
+          step="0.01"
+        />
+        <small class="error-message" *ngIf="hasError('egresoAlimentacion')">
+          {{ getErrorMessage('egresoAlimentacion') }}
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>Educación (pensiones de preescolar, primaria, secundaria, superior, uniformes, útiles escolares, copias)</label>
+        <input
+          type="number"
+          formControlName="egresoEducacion"
+          class="form-control"
+          [class.error]="hasError('egresoEducacion')"
+          placeholder="0.00"
+          min="0"
+          step="0.01"
+        />
+        <small class="error-message" *ngIf="hasError('egresoEducacion')">
+          {{ getErrorMessage('egresoEducacion') }}
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>Indumentaria (vestido o ropa: chompas, sacos, blusas, pantalón, zapatos)</label>
+        <input
+          type="number"
+          formControlName="egresoIndumentaria"
+          class="form-control"
+          [class.error]="hasError('egresoIndumentaria')"
+          placeholder="0.00"
+          min="0"
+          step="0.01"
+        />
+        <small class="error-message" *ngIf="hasError('egresoIndumentaria')">
+          {{ getErrorMessage('egresoIndumentaria') }}
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>Transporte (mantenimiento vehicular, combustible, movilización en taxis, buses etc.)</label>
+        <input
+          type="number"
+          formControlName="egresoTransporte"
+          class="form-control"
+          [class.error]="hasError('egresoTransporte')"
+          placeholder="0.00"
+          min="0"
+          step="0.01"
+        />
+        <small class="error-message" *ngIf="hasError('egresoTransporte')">
+          {{ getErrorMessage('egresoTransporte') }}
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>Salud (seguros médicos privados, medicina diaria, pago de asilos, servicio dental, consultas de psicología, etc.)</label>
+        <input
+          type="number"
+          formControlName="egresoSalud"
+          class="form-control"
+          [class.error]="hasError('egresoSalud')"
+          placeholder="0.00"
+          min="0"
+          step="0.01"
+        />
+        <small class="error-message" *ngIf="hasError('egresoSalud')">
+          {{ getErrorMessage('egresoSalud') }}
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>Servicios Básicos (luz eléctrica, agua potable, teléfono convencional, planes de celular, internet, tv cable, etc.)</label>
+        <input
+          type="number"
+          formControlName="egresoServiciosBasicos"
+          class="form-control"
+          [class.error]="hasError('egresoServiciosBasicos')"
+          placeholder="0.00"
+          min="0"
+          step="0.01"
+        />
+        <small class="error-message" *ngIf="hasError('egresoServiciosBasicos')">
+          {{ getErrorMessage('egresoServiciosBasicos') }}
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>OTROS (pago de impuestos, préstamos, pensiones judiciales, tarjetas de crédito, etc.)</label>
+        <input
+          type="number"
+          formControlName="egresoOtros"
+          class="form-control"
+          [class.error]="hasError('egresoOtros')"
+          placeholder="0.00"
+          min="0"
+          step="0.01"
+        />
+        <small class="error-message" *ngIf="hasError('egresoOtros')">
+          {{ getErrorMessage('egresoOtros') }}
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label><strong>TOTAL DE EGRESOS</strong></label>
+        <input
+          type="text"
+          formControlName="totalEgresos"
+          class="form-control total-field"
+          readonly
+          [value]="formatCurrency(formGroup.get('totalEgresos')?.value)"
+        />
+        <small class="hint">Se calcula automáticamente</small>
+      </div>
+    </div>
+  </div>
+  </fieldset>
+
+  <!-- Sección de Salud Familiar -->
+  <fieldset disabled class="disabled-section">
+  <div class="salud-familiar-section">
+    <h3 class="subsection-title">Situación de la Salud de la Familia</h3>
+    
+    <div class="form-grid">
+      <div class="form-group">
+        <label>¿Algún miembro de la familia presenta discapacidades y/o enfermedades catastróficas, huérfanas o raras consideradas por el Ministerio de Salud Pública?</label>
+        <div class="select-wrapper">
+          <select formControlName="familiaDiscapacidadEnfermedadCatastrofica" class="form-control select-enhanced" [class.error]="hasError('familiaDiscapacidadEnfermedadCatastrofica')">
+            <option value="">Seleccione</option>
+            <option value="SI">Sí</option>
+            <option value="NO">No</option>
+          </select>
+        </div>
+        <small class="error-message" *ngIf="hasError('familiaDiscapacidadEnfermedadCatastrofica')">
+          {{ getErrorMessage('familiaDiscapacidadEnfermedadCatastrofica') }}
+        </small>
+      </div>
+
+      <div class="form-group" *ngIf="formGroup.get('familiaDiscapacidadEnfermedadCatastrofica')?.value === 'SI'">
+        <label>Problema de salud:</label>
+        <input
+          type="text"
+          formControlName="familiaProblemaSalud"
+          class="form-control"
+          [class.error]="hasError('familiaProblemaSalud')"
+          placeholder="Especifique el problema de salud"
+          maxlength="200"
+        />
+        <small class="error-message" *ngIf="hasError('familiaProblemaSalud')">
+          {{ getErrorMessage('familiaProblemaSalud') }}
+        </small>
+      </div>
+
+      <div class="form-group" *ngIf="formGroup.get('familiaDiscapacidadEnfermedadCatastrofica')?.value === 'SI'">
+        <label>Parentesco:</label>
+        <input
+          type="text"
+          formControlName="familiaParentesco"
+          class="form-control"
+          [class.error]="hasError('familiaParentesco')"
+          placeholder="Especifique el parentesco"
+          maxlength="100"
+        />
+        <small class="error-message" *ngIf="hasError('familiaParentesco')">
+          {{ getErrorMessage('familiaParentesco') }}
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>¿Su familia cuenta con servicios médicos?</label>
+        <div class="select-wrapper">
+          <select formControlName="familiaServiciosMedicos" class="form-control select-enhanced" [class.error]="hasError('familiaServiciosMedicos')">
+            <option value="">Seleccione</option>
+            <option value="SI">Sí</option>
+            <option value="NO">No</option>
+          </select>
+        </div>
+        <small class="error-message" *ngIf="hasError('familiaServiciosMedicos')">
+          {{ getErrorMessage('familiaServiciosMedicos') }}
+        </small>
+      </div>
+
+      <div class="form-group full-width" *ngIf="formGroup.get('familiaServiciosMedicos')?.value === 'SI'">
+        <label>Si es que es así especifique con cuáles:</label>
+        <div class="checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="familiaServicioIees" />
+            <span>IEES</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="familiaServicioSeguroPrivado" />
+            <span>Seguro Privado</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="familiaServicioSeguroCampesino" />
+            <span>Seguro Campesino</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="familiaServicioOtro" />
+            <span>Otro</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group" *ngIf="formGroup.get('familiaServicioOtro')?.value">
+        <label>Especifique:</label>
+        <input
+          type="text"
+          formControlName="familiaServicioOtroEspecifique"
+          class="form-control"
+          [class.error]="hasError('familiaServicioOtroEspecifique')"
+          placeholder="Especifique el servicio médico"
+          maxlength="200"
+        />
+        <small class="error-message" *ngIf="hasError('familiaServicioOtroEspecifique')">
+          {{ getErrorMessage('familiaServicioOtroEspecifique') }}
+        </small>
+      </div>
+    </div>
+  </div>
+  </fieldset>
+
+  <!-- Sección de Características de la Vivienda -->
+  <fieldset disabled class="disabled-section">
+  <div class="caracteristicas-vivienda-section">
+    <h3 class="subsection-title">Características de la Vivienda</h3>
+    
+    <div class="form-grid">
+      <!-- 5.5. Tipo de propiedad -->
+      <div class="form-group">
+        <label>5.5. Tipo de propiedad</label>
+        <div class="select-wrapper">
+          <select formControlName="tipoPropiedadVivienda" class="form-control select-enhanced" [class.error]="hasError('tipoPropiedadVivienda')">
+            <option value="">Seleccione el tipo de propiedad</option>
+            @for (opcion of tipoPropiedadViviendaOpciones; track opcion.value) {
+              <option [value]="opcion.value">{{ opcion.label }}</option>
+            }
+          </select>
+        </div>
+        <small class="error-message" *ngIf="hasError('tipoPropiedadVivienda')">
+          {{ getErrorMessage('tipoPropiedadVivienda') }}
+        </small>
+      </div>
+
+      <!-- 5.6. Estructura de la vivienda -->
+      <div class="form-group">
+        <label>5.6. Estructura de la vivienda</label>
+        <div class="select-wrapper">
+          <select formControlName="estructuraVivienda" class="form-control select-enhanced" [class.error]="hasError('estructuraVivienda')">
+            <option value="">Seleccione la estructura</option>
+            @for (opcion of estructuraViviendaOpciones; track opcion.value) {
+              <option [value]="opcion.value">{{ opcion.label }}</option>
+            }
+          </select>
+        </div>
+        <small class="error-message" *ngIf="hasError('estructuraVivienda')">
+          {{ getErrorMessage('estructuraVivienda') }}
+        </small>
+      </div>
+
+      <!-- Especifique estructura (condicional) -->
+      <div class="form-group" *ngIf="formGroup.get('estructuraVivienda')?.value === 'OTRO'">
+        <label>Especifique:</label>
+        <input
+          type="text"
+          formControlName="estructuraViviendaEspecifique"
+          class="form-control"
+          [class.error]="hasError('estructuraViviendaEspecifique')"
+          placeholder="Especifique la estructura de la vivienda"
+          maxlength="120"
+        />
+        <small class="error-message" *ngIf="hasError('estructuraViviendaEspecifique')">
+          {{ getErrorMessage('estructuraViviendaEspecifique') }}
+        </small>
+      </div>
+
+      <!-- 5.7. Tipo de vivienda -->
+      <div class="form-group">
+        <label>5.7. Tipo de vivienda</label>
+        <div class="select-wrapper">
+          <select formControlName="tipoVivienda" class="form-control select-enhanced" [class.error]="hasError('tipoVivienda')">
+            <option value="">Seleccione el tipo de vivienda</option>
+            @for (opcion of tipoViviendaOpciones; track opcion.value) {
+              <option [value]="opcion.value">{{ opcion.label }}</option>
+            }
+          </select>
+        </div>
+        <small class="error-message" *ngIf="hasError('tipoVivienda')">
+          {{ getErrorMessage('tipoVivienda') }}
+        </small>
+      </div>
+
+      <!-- 5.9. ¿Cuántos baños existen en su hogar? -->
+      <div class="form-group">
+        <label>5.9. ¿Cuántos baños existen en su hogar?</label>
+        <input
+          type="number"
+          formControlName="cantidadBanos"
+          class="form-control"
+          [class.error]="hasError('cantidadBanos')"
+          placeholder="Número de baños o NA"
+          min="0"
+          max="99"
+        />
+        <small class="error-message" *ngIf="hasError('cantidadBanos')">
+          {{ getErrorMessage('cantidadBanos') }}
+        </small>
+        <small class="hint">Ingrese el número de baños o "NA"</small>
+      </div>
+
+      <!-- 5.10. ¿Cuántas habitaciones existen en el hogar? -->
+      <div class="form-group">
+        <label>5.10. ¿Cuántas habitaciones existen en el hogar?</label>
+        <input
+          type="number"
+          formControlName="cantidadHabitaciones"
+          class="form-control"
+          [class.error]="hasError('cantidadHabitaciones')"
+          placeholder="Número de habitaciones o NA"
+          min="0"
+          max="99"
+        />
+        <small class="error-message" *ngIf="hasError('cantidadHabitaciones')">
+          {{ getErrorMessage('cantidadHabitaciones') }}
+        </small>
+        <small class="hint">Ingrese el número de habitaciones o "NA"</small>
+      </div>
+
+      <!-- 5.11. ¿Compartes habitación? -->
+      <div class="form-group full-width">
+        <label>5.11. ¿Compartes habitación? (madre, padre, primas, primos, sobrinos, tías, tíos, pareja)</label>
+        <input
+          type="text"
+          formControlName="comparteHabitacion"
+          class="form-control"
+          [class.error]="hasError('comparteHabitacion')"
+          placeholder="Especifique con quién comparte habitación o NA"
+          maxlength="200"
+        />
+        <small class="error-message" *ngIf="hasError('comparteHabitacion')">
+          {{ getErrorMessage('comparteHabitacion') }}
+        </small>
+        <small class="hint">Ejemplo: "madre, padre" o "NA"</small>
+      </div>
+
+      <!-- 5.12. ¿Actualmente con quien o quienes vives? -->
+      <div class="form-group full-width">
+        <label>5.12. ¿Actualmente con quien o quienes vives?</label>
+        <input
+          type="text"
+          formControlName="conQuienVive"
+          class="form-control"
+          [class.error]="hasError('conQuienVive')"
+          placeholder="Especifique con quién vive o NA"
+          maxlength="200"
+        />
+        <small class="error-message" *ngIf="hasError('conQuienVive')">
+          {{ getErrorMessage('conQuienVive') }}
+        </small>
+        <small class="hint">Ejemplo: "madre, padre, hermanos" o "NA"</small>
+      </div>
+
+      <!-- 5.14. ¿El tamaño de la vivienda es suficiente? -->
+      <div class="form-group">
+        <label>5.14. ¿El tamaño de la vivienda es suficiente respecto al número de personas que la habitan?</label>
+        <div class="select-wrapper">
+          <select formControlName="tamanoViviendaSuficiente" class="form-control select-enhanced" [class.error]="hasError('tamanoViviendaSuficiente')">
+            <option value="">Seleccione</option>
+            <option value="SI">Sí</option>
+            <option value="NO">No</option>
+            <option value="NA">N/A</option>
+          </select>
+        </div>
+        <small class="error-message" *ngIf="hasError('tamanoViviendaSuficiente')">
+          {{ getErrorMessage('tamanoViviendaSuficiente') }}
+        </small>
+      </div>
+
+      <!-- Croquis de la Vivienda -->
+      <div class="form-group full-width">
+        <label>Croquis de la Vivienda <span class="required">*</span></label>
+        <div class="file-upload-wrapper">
+          <input
+            type="file"
+            #croquisInput
+            (change)="onCroquisFileSelected($event)"
+            accept="image/*"
+            class="file-input"
+            [disabled]="croquisUploading"
+            style="display: none;"
+          />
+          
+          <div class="file-upload-area" *ngIf="!formGroup.get('croquisViviendaUrl')?.value || formGroup.get('croquisViviendaUrl')?.value === 'NA'">
+            <button
+              type="button"
+              class="btn-upload"
+              (click)="croquisInput.click()"
+              [disabled]="croquisUploading"
+            >
+              @if (croquisUploading) {
+                <span>Subiendo...</span>
+              } @else {
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+                <span>Subir Croquis de Vivienda</span>
+              }
+            </button>
+            <p class="upload-hint">
+              (Foto de Google Maps). En caso que no aparezca su dirección en Google Maps, proceda a dibujar el croquis, esta debe estar legible con calles principales y secundarias.
+            </p>
+            <small class="hint">Formatos permitidos: JPG, PNG, WebP, GIF</small>
+          </div>
+
+          <div class="file-preview" *ngIf="formGroup.get('croquisViviendaUrl')?.value && formGroup.get('croquisViviendaUrl')?.value !== 'NA'">
+            <img 
+              [src]="formGroup.get('croquisViviendaUrl')?.value" 
+              alt="Croquis de Vivienda"
+              class="preview-image"
+            />
+            <div class="file-actions">
+              <button
+                type="button"
+                class="btn-remove"
+                (click)="removeCroquis(croquisInput)"
+                [disabled]="croquisUploading"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+                Eliminar
+              </button>
+              <button
+                type="button"
+                class="btn-change"
+                (click)="croquisInput.click()"
+                [disabled]="croquisUploading"
+              >
+                Cambiar Imagen
+              </button>
+            </div>
+          </div>
+
+          <small class="error-message" *ngIf="croquisError">
+            {{ croquisError }}
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+  </fieldset>
+</div>

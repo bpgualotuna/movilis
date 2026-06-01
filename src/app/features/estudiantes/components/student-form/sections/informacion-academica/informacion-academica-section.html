@@ -1,0 +1,279 @@
+<div class="step-section" [formGroup]="formGroup">
+  <h2 class="step-title">
+    <span class="step-icon-large" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+        <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+      </svg>
+    </span>
+    Información Académica
+  </h2>
+  
+  <div class="form-grid">
+    <!-- Nombre del Colegio con Autocompletado -->
+    <div class="form-group">
+      <label>Nombre del Colegio de Procedencia</label>
+      <div class="autocomplete-wrapper">
+        <input
+          type="text"
+          [value]="colegioSearch"
+          (input)="onColegioInput($event)"
+          (blur)="onColegioBlur()"
+          (focus)="onColegioFocus()"
+          class="form-control"
+          style="text-transform: uppercase"
+          [class.error]="hasError('nombreColegioProcedencia')"
+          placeholder="Buscar o escribir nombre del colegio..."
+          autocomplete="off"
+        />
+        @if (showColegios && filteredColegios.length > 0) {
+          <div class="autocomplete-dropdown">
+            @for (item of filteredColegios; track $index) {
+              <div class="autocomplete-item" (mousedown)="selectColegio(item)">
+                {{ item.nombre }}
+              </div>
+            }
+          </div>
+        }
+        @if (showColegios && filteredColegios.length === 0 && isColegioNuevo && colegioSearch.length > 2) {
+          <div class="autocomplete-dropdown">
+            <div class="autocomplete-item autocomplete-add" (mousedown)="agregarColegioNuevo()">
+              ➕ Agregar "{{ colegioSearch }}" como nuevo colegio
+            </div>
+          </div>
+        }
+      </div>
+      <small class="error-message" *ngIf="hasError('nombreColegioProcedencia')">
+        {{ getErrorMessage('nombreColegioProcedencia') }}
+      </small>
+      <small class="hint">Puede buscar en la lista o escribir un nombre nuevo</small>
+    </div>
+
+    <div class="form-group">
+      <label>Tipo de Colegio <span class="required">*</span></label>
+      
+      <!-- Siempre mostrar select para que el estudiante elija el tipo -->
+      <div class="select-wrapper">
+        <select 
+          formControlName="tipoColegioId" 
+          class="form-control select-enhanced" 
+          [class.error]="hasError('tipoColegioId')">
+          <option value="">Seleccione el tipo de colegio</option>
+          @if (enums?.TipoColegio) {
+            @for (item of enums?.TipoColegio; track $index) {
+              <option [value]="item">{{ getEnumLabel(item) }}</option>
+            }
+          }
+        </select>
+      </div>
+      <small class="hint">Seleccione el tipo de colegio</small>
+      
+      <small class="error-message" *ngIf="hasError('tipoColegioId')">
+        {{ getErrorMessage('tipoColegioId') }}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Año de Graduación</label>
+      <input
+        type="number"
+        formControlName="anioGraduacion"
+        class="form-control"
+        [class.error]="hasError('anioGraduacion')"
+        placeholder="Año de graduación"
+        min="1900"
+        max="2100"
+      />
+      <small class="error-message" *ngIf="hasError('anioGraduacion')">
+        {{ getErrorMessage('anioGraduacion') }}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Carrera</label>
+      <div class="select-wrapper">
+        <select formControlName="carrera" class="form-control select-enhanced" [class.error]="hasError('carrera')">
+          <option value="">Seleccione la carrera</option>
+          @for (carrera of carrerasOpciones; track $index) {
+            <option [value]="carrera">{{ carrera }}</option>
+          }
+        </select>
+      </div>
+      <small class="error-message" *ngIf="hasError('carrera')">
+        {{ getErrorMessage('carrera') }}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Diseño Curricular</label>
+      <div class="select-wrapper">
+        <select formControlName="disenoCurricular" class="form-control select-enhanced" [class.error]="hasError('disenoCurricular')">
+          <option value="">Seleccione el diseño curricular</option>
+          @if (enums?.DisenoCurricular) {
+            @for (item of enums?.DisenoCurricular; track $index) {
+              <option [value]="item">{{ getEnumLabel(item) }}</option>
+            }
+          }
+        </select>
+      </div>
+      <small class="error-message" *ngIf="hasError('disenoCurricular')">
+        {{ getErrorMessage('disenoCurricular') }}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Periodo Académico</label>
+      <div class="select-wrapper">
+        <select formControlName="periodoAcademico" class="form-control select-enhanced" [class.error]="hasError('periodoAcademico')">
+          <option value="">Seleccione el período académico</option>
+          <option value="2026-1">2026-1</option>
+          <option value="2026-2">2026-2</option>
+        </select>
+      </div>
+      <small class="error-message" *ngIf="hasError('periodoAcademico')">
+        {{ getErrorMessage('periodoAcademico') }}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Modalidad de Carrera</label>
+      <div class="select-wrapper">
+        <select formControlName="modalidadCarrera" class="form-control select-enhanced" [class.error]="hasError('modalidadCarrera')">
+          <option value="">Seleccione la modalidad</option>
+          @if (enums?.ModalidadCarrera) {
+            @for (item of enums?.ModalidadCarrera; track $index) {
+              <option [value]="item">{{ getEnumLabel(item) }}</option>
+            }
+          }
+        </select>
+      </div>
+      <small class="error-message" *ngIf="hasError('modalidadCarrera')">
+        {{ getErrorMessage('modalidadCarrera') }}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Jornada de Carrera</label>
+      <div class="select-wrapper">
+        <select formControlName="jornadaCarrera" class="form-control select-enhanced" [class.error]="hasError('jornadaCarrera')">
+          <option value="">Seleccione la jornada</option>
+          @if (enums?.JornadaCarrera) {
+            @for (item of enums?.JornadaCarrera; track $index) {
+              <option [value]="item">{{ getEnumLabel(item) }}</option>
+            }
+          }
+        </select>
+      </div>
+      <small class="error-message" *ngIf="hasError('jornadaCarrera')">
+        {{ getErrorMessage('jornadaCarrera') }}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Fecha de Inicio de Carrera</label>
+      <input
+        type="date"
+        formControlName="fechaInicioCarrera"
+        class="form-control"
+        [class.error]="hasError('fechaInicioCarrera')"
+      />
+      <small class="error-message" *ngIf="hasError('fechaInicioCarrera')">
+        {{ getErrorMessage('fechaInicioCarrera') }}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Tipo de Matrícula</label>
+      <div class="select-wrapper">
+        <select formControlName="tipoMatriculaId" class="form-control select-enhanced" [class.error]="hasError('tipoMatriculaId')">
+          <option value="">Seleccione el tipo de matrícula</option>
+          @if (enums?.TipoMatricula) {
+            @for (item of enums?.TipoMatricula; track $index) {
+              <option [value]="item">{{ getEnumLabel(item) }}</option>
+            }
+          }
+        </select>
+      </div>
+      <small class="error-message" *ngIf="hasError('tipoMatriculaId')">
+        {{ getErrorMessage('tipoMatriculaId') }}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Duración del Periodo Académico (meses)</label>
+      <input
+        type="number"
+        formControlName="duracionPeriodoAcademico"
+        class="form-control"
+        [class.error]="hasError('duracionPeriodoAcademico')"
+        min="1"
+        max="12"
+      />
+      <small class="error-message" *ngIf="hasError('duracionPeriodoAcademico')">
+        {{ getErrorMessage('duracionPeriodoAcademico') }}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Nivel Académico que Cursa <span class="required">*</span></label>
+      <div class="select-wrapper">
+        <select formControlName="nivelAcademicoQueCursa" class="form-control select-enhanced" [class.error]="hasError('nivelAcademicoQueCursa')">
+          <option value="">Seleccione el nivel académico</option>
+          <option value="PRIMERO">PRIMERO</option>
+          <option value="SEGUNDO">SEGUNDO</option>
+          <option value="TERCERO">TERCERO</option>
+          <option value="CUARTO">CUARTO</option>
+        </select>
+      </div>
+      <small class="error-message" *ngIf="hasError('nivelAcademicoQueCursa')">
+        {{ getErrorMessage('nivelAcademicoQueCursa') }}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>¿Ha repetido al menos una materia?</label>
+      <div class="select-wrapper">
+        <select formControlName="haRepetidoAlMenosUnaMateria" class="form-control select-enhanced" [class.error]="hasError('haRepetidoAlMenosUnaMateria')">
+          <option value="">Seleccione</option>
+          <option value="SI">Sí</option>
+          <option value="NO">No</option>
+        </select>
+      </div>
+      <small class="error-message" *ngIf="hasError('haRepetidoAlMenosUnaMateria')">
+        {{ getErrorMessage('haRepetidoAlMenosUnaMateria') }}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Paralelo</label>
+      <div class="select-wrapper">
+        <select formControlName="paraleloId" class="form-control select-enhanced" [class.error]="hasError('paraleloId')">
+          <option value="">Seleccione el paralelo</option>
+          @if (enums?.Paralelo) {
+            @for (item of enums?.Paralelo; track $index) {
+              <option [value]="item">{{ item }}</option>
+            }
+          }
+        </select>
+      </div>
+      <small class="error-message" *ngIf="hasError('paraleloId')">
+        {{ getErrorMessage('paraleloId') }}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>¿Recibe pensión diferenciada?</label>
+      <div class="select-wrapper">
+        <select formControlName="recibePensionDiferenciada" class="form-control select-enhanced" [class.error]="hasError('recibePensionDiferenciada')">
+          <option value="">Seleccione</option>
+          <option value="SI">Sí</option>
+          <option value="NO">No</option>
+        </select>
+      </div>
+      <small class="error-message" *ngIf="hasError('recibePensionDiferenciada')">
+        {{ getErrorMessage('recibePensionDiferenciada') }}
+      </small>
+    </div>
+
+  </div>
+</div>
