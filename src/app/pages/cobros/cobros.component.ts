@@ -24,6 +24,27 @@ export class CobrosComponent implements OnInit {
   isSubmitting = false;
   showSuccessModal = false;
   showAutocomplete = false;
+  activeTab: 'historial' | 'registro' = 'historial';
+
+  setActiveTab(tab: 'historial' | 'registro'): void {
+    this.activeTab = tab;
+  }
+
+  // Upload y Abonos properties
+  fileName = '';
+  comprobanteFile: File | null = null;
+  costoTotalConcepto = 0;
+  sobranteDeuda = 0;
+
+  conceptCosts: Record<string, number> = {
+    'Matrícula de Desarrollo de Software': 150.00,
+    'Matrícula de Estética': 120.00,
+    'Matrícula de Transporte': 150.00,
+    'Mensualidad Desarrollo de Software - Mayo': 120.00,
+    'Mensualidad Estética - Mayo': 85.00,
+    'Derechos de Examen': 45.00,
+    'Derechos de Certificación': 30.00
+  };
 
   // Filtros de búsqueda
   searchQuery = '';
@@ -45,9 +66,29 @@ export class CobrosComponent implements OnInit {
       alumno: ['', [Validators.required, Validators.maxLength(100)]],
       identificacion: ['', [Validators.required, Validators.pattern('^[0-9]{10}$|^[0-9]{13}$')]],
       concepto: ['', Validators.required],
+      tipoPago: ['TOTAL', Validators.required],
       monto: ['', [Validators.required, Validators.min(0.01)]],
-      metodoPago: ['', Validators.required]
+      metodoPago: ['', Validators.required],
+      comprobante: [null]
     });
+
+    // Escuchar cambios en metodoPago para ajustar validación de comprobante
+    this.pagoForm.get('metodoPago')?.valueChanges.subscribe(metodo => {
+      const comprobanteControl = this.pagoForm.get('comprobante');
+      if (metodo === 'Transferencia Bancaria') {
+        comprobanteControl?.setValidators([Validators.required]);
+      } else {
+        comprobanteControl?.clearValidators();
+        this.fileName = '';
+        this.comprobanteFile = null;
+      }
+      comprobanteControl?.updateValueAndValidity();
+    });
+
+    // Escuchar cambios en concepto y tipoPago para manejar el monto y la deuda
+    this.pagoForm.get('concepto')?.valueChanges.subscribe(() => this.actualizarMontoYDeuda());
+    this.pagoForm.get('tipoPago')?.valueChanges.subscribe(() => this.actualizarMontoYDeuda());
+    this.pagoForm.get('monto')?.valueChanges.subscribe(() => this.calcularSobranteDeuda());
   }
 
   loadPagos(): void {
@@ -138,7 +179,7 @@ export class CobrosComponent implements OnInit {
     }
 
     this.isSubmitting = true;
-    const formValue = this.pagoForm.value;
+    const formValue = this.pagoForm.getRawValue();
     
     const nuevoPago: Omit<Pago, 'id'> = {
       fecha: new Date().toISOString().split('T')[0],
@@ -147,7 +188,10 @@ export class CobrosComponent implements OnInit {
       concepto: formValue.concepto,
       monto: Number(formValue.monto),
       metodoPago: formValue.metodoPago,
-      estado: 'PAGADO' // Los pagos registrados manualmente se aprueban por defecto
+      estado: 'PAGADO', // Los pagos registrados manualmente se aprueban por defecto
+      tipoPago: formValue.tipoPago,
+      sobranteDeuda: formValue.tipoPago === 'ABONO' ? this.sobranteDeuda : 0,
+      comprobanteNombre: formValue.metodoPago === 'Transferencia Bancaria' ? this.fileName : undefined
     };
 
     this.cobrosService.registrarPago(nuevoPago).subscribe({
@@ -156,7 +200,10 @@ export class CobrosComponent implements OnInit {
         this.applyFilters();
         this.isSubmitting = false;
         this.showSuccessModal = true;
-        this.pagoForm.reset();
+        this.pagoForm.reset({ tipoPago: 'TOTAL' });
+        this.fileName = '';
+        this.comprobanteFile = null;
+        this.activeTab = 'historial';
       },
       error: (err) => {
         console.error('Error al registrar pago:', err);
@@ -426,6 +473,46 @@ export class CobrosComponent implements OnInit {
       </html>
     `);
     printWindow.document.close();
+  }
+
+  onFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.fileName = file.name;
+      this.comprobanteFile = file;
+      this.pagoForm.patchValue({ comprobante: file });
+      this.pagoForm.get('comprobante')?.updateValueAndValidity();
+    }
+  }
+
+  actualizarMontoYDeuda(): void {
+    const concepto = this.pagoForm.get('concepto')?.value;
+    const tipoPago = this.pagoForm.get('tipoPago')?.value;
+    const costoTotal = this.conceptCosts[concepto] || 0;
+
+    if (tipoPago === 'TOTAL') {
+      this.pagoForm.get('monto')?.setValue(costoTotal);
+      this.pagoForm.get('monto')?.setValidators([Validators.required, Validators.min(0.01)]);
+      this.pagoForm.get('monto')?.disable();
+    } else {
+      this.pagoForm.get('monto')?.enable();
+      this.pagoForm.get('monto')?.setValidators([Validators.required, Validators.min(0.01), Validators.max(costoTotal)]);
+    }
+    this.pagoForm.get('monto')?.updateValueAndValidity();
+    this.calcularSobranteDeuda();
+  }
+
+  calcularSobranteDeuda(): void {
+    const concepto = this.pagoForm.get('concepto')?.value;
+    const monto = Number(this.pagoForm.getRawValue().monto) || 0;
+    this.costoTotalConcepto = this.conceptCosts[concepto] || 0;
+
+    if (this.pagoForm.get('tipoPago')?.value === 'ABONO' && this.costoTotalConcepto > 0) {
+      this.sobranteDeuda = Math.max(0, this.costoTotalConcepto - monto);
+    } else {
+      this.sobranteDeuda = 0;
+    }
   }
 
   // Helpers de validación

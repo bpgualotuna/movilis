@@ -7,185 +7,240 @@
     </div>
   </header>
 
-  <!-- GRID DE DOS COLUMNAS -->
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button 
+      type="button" 
+      class="tab-btn" 
+      [class.active]="activeTab === 'historial'" 
+      (click)="setActiveTab('historial')"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="12 6 12 12 16 14"/>
+      </svg>
+      Historial General
+    </button>
+    <button 
+      type="button" 
+      class="tab-btn" 
+      [class.active]="activeTab === 'registro'" 
+      (click)="setActiveTab('registro')"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="16"/>
+        <line x1="8" y1="12" x2="16" y2="12"/>
+      </svg>
+      Registrar Nuevo Pago
+    </button>
+  </div>
+
+  <!-- CONTAINER CON RENDERING CONDICIONAL -->
   <div class="module-grid">
     <!-- COLUMNA HISTORIAL DE PAGOS (Izquierda) -->
-    <section class="module-card history-card">
-      <div class="card-header-bar">
-        <div class="header-title-row">
-          <h2>Historial General de Transacciones</h2>
-          <div class="export-buttons">
-            <button type="button" class="btn-export csv" (click)="exportarCSV()">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" x2="12" y1="15" y2="3"/>
+    @if (activeTab === 'historial') {
+      <section class="module-card history-card">
+        <div class="card-header-bar">
+          <div class="header-title-row">
+            <h2>Historial General de Transacciones</h2>
+            <div class="export-buttons">
+              <button type="button" class="btn-export csv" (click)="exportarCSV()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" x2="12" y1="15" y2="3"/>
+                </svg>
+                Exportar CSV
+              </button>
+              <button type="button" class="btn-export pdf" (click)="exportarPDF()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" x2="12" y1="15" y2="3"/>
+                </svg>
+                Exportar PDF
+              </button>
+            </div>
+          </div>
+          <div class="filters-row">
+            <!-- Buscador por Texto -->
+            <div class="search-input-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" x2="16.65" y1="21" y2="16.65"/>
               </svg>
-              Exportar CSV
-            </button>
-            <button type="button" class="btn-export pdf" (click)="exportarPDF()">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" x2="12" y1="15" y2="3"/>
-              </svg>
-              Exportar PDF
-            </button>
+              <input 
+                type="text" 
+                placeholder="Buscar por alumno o cédula..." 
+                (input)="onSearchChange($event)"
+                [value]="searchQuery"
+              />
+            </div>
+
+            <!-- Filtro de Estado -->
+            <div class="select-filter-wrapper">
+              <select (change)="onStatusFilterChange($event)" [value]="statusFilter">
+                <option value="">Todos los estados</option>
+                <option value="PAGADO">Pagado</option>
+                <option value="PENDIENTE">Pendiente</option>
+              </select>
+            </div>
           </div>
         </div>
-        <div class="filters-row">
-          <!-- Buscador por Texto -->
-          <div class="search-input-wrapper">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"/>
-              <line x1="21" x2="16.65" y1="21" y2="16.65"/>
-            </svg>
-            <input 
-              type="text" 
-              placeholder="Buscar por alumno o cédula..." 
-              (input)="onSearchChange($event)"
-              [value]="searchQuery"
-            />
-          </div>
 
-          <!-- Filtro de Estado -->
-          <div class="select-filter-wrapper">
-            <select (change)="onStatusFilterChange($event)" [value]="statusFilter">
-              <option value="">Todos los estados</option>
-              <option value="PAGADO">Pagado</option>
-              <option value="PENDIENTE">Pendiente</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- TABLA DE HISTORIAL -->
-      <div class="table-responsive-container">
-        @if (isLoading) {
-          <div class="loading-table">
-            <div class="spinner"></div>
-            <p>Cargando transacciones...</p>
-          </div>
-        } @else {
-          @if (pagosFiltrados.length === 0) {
-            <div class="empty-state">
-              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"/>
-                <line x1="12" x2="12" y1="8" y2="12"/>
-                <line x1="12" x2="12.01" y1="16" y2="16"/>
-              </svg>
-              <p>No se encontraron registros de pagos que coincidan con la búsqueda.</p>
+        <!-- TABLA DE HISTORIAL -->
+        <div class="table-responsive-container">
+          @if (isLoading) {
+            <div class="loading-table">
+              <div class="spinner"></div>
+              <p>Cargando transacciones...</p>
             </div>
           } @else {
-            <table class="premium-table">
-              <thead>
-                <tr>
-                  <th>Fecha</th>
-                  <th>Estudiante</th>
-                  <th>Identificación</th>
-                  <th>Concepto</th>
-                  <th>Monto</th>
-                  <th>Método</th>
-                  <th>Estado</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (pago of pagosFiltrados; track pago.id) {
+            @if (pagosFiltrados.length === 0) {
+              <div class="empty-state">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" x2="12" y1="8" y2="12"/>
+                  <line x1="12" x2="12.01" y1="16" y2="16"/>
+                </svg>
+                <p>No se encontraron registros de pagos que coincidan con la búsqueda.</p>
+              </div>
+            } @else {
+              <table class="premium-table">
+                <thead>
                   <tr>
-                    <td class="date-cell">{{ pago.fecha }}</td>
-                    <td class="student-cell">{{ pago.alumno }}</td>
-                    <td class="id-cell">{{ pago.identificacion }}</td>
-                    <td class="concept-cell" [title]="pago.concepto">{{ pago.concepto }}</td>
-                    <td class="amount-cell">{{ pago.monto | currency }}</td>
-                    <td class="method-cell">{{ pago.metodoPago }}</td>
-                    <td>
-                      <span class="status-badge" [class.paid]="pago.estado === 'PAGADO'" [class.pending]="pago.estado === 'PENDIENTE'">
-                        {{ pago.estado }}
-                      </span>
-                    </td>
+                    <th>Fecha</th>
+                    <th>Estudiante</th>
+                    <th>Identificación</th>
+                    <th>Concepto</th>
+                    <th>Monto</th>
+                    <th>Método</th>
+                    <th>Estado</th>
                   </tr>
-                }
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  @for (pago of pagosFiltrados; track pago.id) {
+                    <tr>
+                      <td class="date-cell">{{ pago.fecha }}</td>
+                      <td class="student-cell">{{ pago.alumno }}</td>
+                      <td class="id-cell">{{ pago.identificacion }}</td>
+                      <td class="concept-cell" [title]="pago.concepto">
+                        <div class="concept-title">{{ pago.concepto }}</div>
+                        @if (pago.tipoPago === 'ABONO') {
+                          <span class="abono-subtext">
+                            <span class="abono-badge">Abono</span>
+                            Saldo rest: {{ pago.sobranteDeuda | currency }}
+                          </span>
+                        }
+                      </td>
+                      <td class="amount-cell">{{ pago.monto | currency }}</td>
+                      <td class="method-cell">{{ pago.metodoPago }}</td>
+                      <td>
+                        <span class="status-badge" [class.paid]="pago.estado === 'PAGADO'" [class.pending]="pago.estado === 'PENDIENTE'">
+                          {{ pago.estado }}
+                        </span>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            }
           }
-        }
-      </div>
-    </section>
+        </div>
+      </section>
+    }
 
     <!-- COLUMNA REGISTRO DE PAGOS (Derecha) -->
-    <section class="module-card form-card">
-      <div class="card-header-bar">
-        <h2>Registrar Nuevo Pago</h2>
-      </div>
+    @if (activeTab === 'registro') {
+      <section class="module-card form-card">
+        <div class="card-header-bar">
+          <h2>Registrar Nuevo Pago</h2>
+        </div>
 
-      <form [formGroup]="pagoForm" (ngSubmit)="onSubmit()" class="premium-form">
-        <!-- BUSCAR ALUMNO (Con Autocompletado) -->
-        <div class="form-group autocomplete-container">
-          <label>Buscar Alumno <span class="required">*</span></label>
-          <div class="input-icon-wrapper">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"/>
-              <line x1="21" x2="16.65" y1="21" y2="16.65"/>
-            </svg>
+        <form [formGroup]="pagoForm" (ngSubmit)="onSubmit()" class="premium-form">
+          <!-- BUSCAR ALUMNO (Con Autocompletado) -->
+          <div class="form-group autocomplete-container">
+            <label>Buscar Alumno <span class="required">*</span></label>
+            <div class="input-icon-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" x2="16.65" y1="21" y2="16.65"/>
+              </svg>
+              <input 
+                type="text" 
+                formControlName="alumno" 
+                placeholder="Escribe el nombre del alumno..."
+                (input)="onAlumnoInputChange($event)"
+                [class.error]="hasError('alumno', 'required')"
+              />
+            </div>
+            <!-- Desplegable Autocomplete -->
+            @if (showAutocomplete && alumnosSugeridos.length > 0) {
+              <ul class="autocomplete-dropdown">
+                @for (sug of alumnosSugeridos; track sug) {
+                  <li (click)="seleccionarAlumno(sug)">{{ sug }}</li>
+                }
+              </ul>
+            }
+            <small class="error-message" *ngIf="hasError('alumno', 'required')">
+              El nombre del alumno es obligatorio.
+            </small>
+          </div>
+
+          <!-- CÉDULA / IDENTIFICACIÓN -->
+          <div class="form-group">
+            <label>Cédula o RUC <span class="required">*</span></label>
             <input 
               type="text" 
-              formControlName="alumno" 
-              placeholder="Escribe el nombre del alumno..."
-              (input)="onAlumnoInputChange($event)"
-              [class.error]="hasError('alumno', 'required')"
+              formControlName="identificacion" 
+              placeholder="Ej. 1723456789"
+              [class.error]="hasError('identificacion', 'required') || hasError('identificacion', 'pattern')"
             />
+            <small class="error-message" *ngIf="hasError('identificacion', 'required')">
+              El número de identificación es obligatorio.
+            </small>
+            <small class="error-message" *ngIf="hasError('identificacion', 'pattern')">
+              Debe ser un número válido de 10 dígitos (Cédula) o 13 dígitos (RUC).
+            </small>
           </div>
-          <!-- Desplegable Autocomplete -->
-          @if (showAutocomplete && alumnosSugeridos.length > 0) {
-            <ul class="autocomplete-dropdown">
-              @for (sug of alumnosSugeridos; track sug) {
-                <li (click)="seleccionarAlumno(sug)">{{ sug }}</li>
-              }
-            </ul>
-          }
-          <small class="error-message" *ngIf="hasError('alumno', 'required')">
-            El nombre del alumno es obligatorio.
-          </small>
-        </div>
 
-        <!-- CÉDULA / IDENTIFICACIÓN -->
-        <div class="form-group">
-          <label>Cédula o RUC <span class="required">*</span></label>
-          <input 
-            type="text" 
-            formControlName="identificacion" 
-            placeholder="Ej. 1723456789"
-            [class.error]="hasError('identificacion', 'required') || hasError('identificacion', 'pattern')"
-          />
-          <small class="error-message" *ngIf="hasError('identificacion', 'required')">
-            El número de identificación es obligatorio.
-          </small>
-          <small class="error-message" *ngIf="hasError('identificacion', 'pattern')">
-            Debe ser un número válido de 10 dígitos (Cédula) o 13 dígitos (RUC).
-          </small>
-        </div>
-
-        <!-- CONCEPTO -->
-        <div class="form-group">
-          <label>Concepto de Pago <span class="required">*</span></label>
-          <div class="select-wrapper">
-            <select formControlName="concepto" [class.error]="hasError('concepto', 'required')">
-              <option value="">Seleccione un concepto...</option>
-              <option value="Matrícula de Desarrollo de Software">Matrícula - Desarrollo de Software ($150.00)</option>
-              <option value="Matrícula de Estética">Matrícula - Estética ($120.00)</option>
-              <option value="Matrícula de Transporte">Matrícula - Transporte ($150.00)</option>
-              <option value="Mensualidad Desarrollo de Software - Mayo">Mensualidad - Software Mayo ($120.00)</option>
-              <option value="Mensualidad Estética - Mayo">Mensualidad - Estética Mayo ($85.00)</option>
-              <option value="Derechos de Examen">Derechos de Examen ($45.00)</option>
-              <option value="Derechos de Certificación">Derechos de Certificación ($30.00)</option>
-            </select>
-          </div>
-          <small class="error-message" *ngIf="hasError('concepto', 'required')">
+          <!-- CONCEPTO -->
+          <div class="form-group">
+            <label>Concepto de Pago <span class="required">*</span></label>
+            <div class="select-wrapper">
+              <select formControlName="concepto" [class.error]="hasError('concepto', 'required')">
+                <option value="">Seleccione un concepto...</option>
+                <option value="Matrícula de Desarrollo de Software">Matrícula - Desarrollo de Software ($150.00)</option>
+                <option value="Matrícula de Estética">Matrícula - Estética ($120.00)</option>
+                <option value="Matrícula de Transporte">Matrícula - Transporte ($150.00)</option>
+                <option value="Mensualidad Desarrollo de Software - Mayo">Mensualidad - Software Mayo ($120.00)</option>
+                <option value="Mensualidad Estética - Mayo">Mensualidad - Estética Mayo ($85.00)</option>
+                <option value="Derechos de Examen">Derechos de Examen ($45.00)</option>
+                <option value="Derechos de Certificación">Derechos de Certificación ($30.00)</option>
+              </select>
+            </div>
+            <small class="error-message" *ngIf="hasError('concepto', 'required')">
             El concepto de pago es obligatorio.
           </small>
         </div>
 
-        <!-- MONTO ($) -->
+        <!-- TIPO DE PAGO -->
+        <div class="form-group">
+          <label>Tipo de Pago <span class="required">*</span></label>
+          <div class="payment-type-toggle">
+            <label class="toggle-option" [class.selected]="pagoForm.get('tipoPago')?.value === 'TOTAL'">
+              <input type="radio" formControlName="tipoPago" value="TOTAL" />
+              <span>Pago Total</span>
+            </label>
+            <label class="toggle-option" [class.selected]="pagoForm.get('tipoPago')?.value === 'ABONO'">
+              <input type="radio" formControlName="tipoPago" value="ABONO" />
+              <span>Abono / Parcial</span>
+            </label>
+          </div>
+        </div>
+
+          <!-- MONTO ($) -->
         <div class="form-group">
           <label>Monto a Pagar ($ USD) <span class="required">*</span></label>
           <div class="input-prefix-wrapper">
@@ -206,13 +261,30 @@
           </small>
         </div>
 
-        <!-- MÉTODO DE PAGO -->
+        <!-- DEUDA SOBRANTE (Si es Abono) -->
+        @if (pagoForm.get('tipoPago')?.value === 'ABONO' && costoTotalConcepto > 0) {
+          <div class="abono-info-box">
+            <div class="info-row">
+              <span>Costo Total:</span>
+              <span class="value">{{ costoTotalConcepto | currency }}</span>
+            </div>
+            <div class="info-row">
+              <span>Monto Abonado:</span>
+              <span class="value">{{ (pagoForm.getRawValue().monto || 0) | currency }}</span>
+            </div>
+            <div class="info-row highlight">
+              <span>Saldo Restante:</span>
+              <span class="value">{{ sobranteDeuda | currency }}</span>
+            </div>
+          </div>
+        }
+
+          <!-- MÉTODO DE PAGO -->
         <div class="form-group">
           <label>Método de Pago <span class="required">*</span></label>
           <div class="select-wrapper">
             <select formControlName="metodoPago" [class.error]="hasError('metodoPago', 'required')">
               <option value="">Seleccione el método...</option>
-              <option value="Efectivo">Efectivo</option>
               <option value="Transferencia Bancaria">Transferencia Bancaria</option>
               <option value="Tarjeta de Crédito">Tarjeta de Crédito</option>
             </select>
@@ -222,18 +294,46 @@
           </small>
         </div>
 
-        <!-- BOTÓN ENVIAR -->
-        <button 
-          type="submit" 
-          class="btn-submit" 
-          [disabled]="isSubmitting"
-          [class.loading]="isSubmitting"
-        >
-          <span *ngIf="!isSubmitting">Registrar Transacción</span>
-          <span *ngIf="isSubmitting">Procesando Pago...</span>
-        </button>
-      </form>
-    </section>
+        <!-- COMPROBANTE DE PAGO (Solo si es Transferencia Bancaria) -->
+        @if (pagoForm.get('metodoPago')?.value === 'Transferencia Bancaria') {
+          <div class="form-group">
+            <label>Comprobante de Transferencia <span class="required">*</span></label>
+            <div class="file-upload-wrapper">
+              <input 
+                type="file" 
+                id="comprobante-input" 
+                (change)="onFileChange($event)" 
+                accept="image/*,application/pdf"
+                class="file-input-hidden"
+              />
+              <label for="comprobante-input" class="file-upload-btn" [class.uploaded]="fileName">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" x2="12" y1="3" y2="15"/>
+                </svg>
+                <span>{{ fileName || 'Subir Comprobante (Imagen o PDF)' }}</span>
+              </label>
+            </div>
+            <small class="error-message" *ngIf="hasError('comprobante', 'required')">
+              El comprobante de transferencia es obligatorio.
+            </small>
+          </div>
+        }
+
+          <!-- BOTÓN ENVIAR -->
+          <button 
+            type="submit" 
+            class="btn-submit" 
+            [disabled]="isSubmitting"
+            [class.loading]="isSubmitting"
+          >
+            <span *ngIf="!isSubmitting">Registrar Transacción</span>
+            <span *ngIf="isSubmitting">Procesando Pago...</span>
+          </button>
+        </form>
+      </section>
+    }
   </div>
 
   <!-- MODAL DE EXITO COMPONENT -->

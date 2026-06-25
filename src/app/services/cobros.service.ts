@@ -10,6 +10,9 @@ export interface Pago {
   monto: number;
   metodoPago: string;
   estado: 'PAGADO' | 'PENDIENTE';
+  tipoPago?: 'TOTAL' | 'ABONO';
+  sobranteDeuda?: number;
+  comprobanteNombre?: string;
 }
 
 @Injectable({
@@ -26,7 +29,10 @@ export class CobrosService {
       concepto: 'Matrícula de Desarrollo de Software',
       monto: 150.00,
       metodoPago: 'Transferencia Bancaria',
-      estado: 'PAGADO'
+      estado: 'PAGADO',
+      tipoPago: 'TOTAL',
+      sobranteDeuda: 0,
+      comprobanteNombre: 'transfer_brayan.pdf'
     },
     {
       id: 2,
@@ -34,9 +40,12 @@ export class CobrosService {
       alumno: 'María José Espinosa',
       identificacion: '1754896231',
       concepto: 'Mensualidad Estética - Mayo',
-      monto: 85.00,
-      metodoPago: 'Efectivo',
-      estado: 'PAGADO'
+      monto: 50.00,
+      metodoPago: 'Transferencia Bancaria',
+      estado: 'PAGADO',
+      tipoPago: 'ABONO',
+      sobranteDeuda: 35.00,
+      comprobanteNombre: 'comprobante_estetica_mje.png'
     },
     {
       id: 3,
@@ -46,7 +55,9 @@ export class CobrosService {
       concepto: 'Matrícula de Transporte',
       monto: 150.00,
       metodoPago: 'Tarjeta de Crédito',
-      estado: 'PENDIENTE'
+      estado: 'PENDIENTE',
+      tipoPago: 'TOTAL',
+      sobranteDeuda: 0
     },
     {
       id: 4,
@@ -56,7 +67,10 @@ export class CobrosService {
       concepto: 'Derechos de Examen',
       monto: 45.00,
       metodoPago: 'Transferencia Bancaria',
-      estado: 'PAGADO'
+      estado: 'PAGADO',
+      tipoPago: 'TOTAL',
+      sobranteDeuda: 0,
+      comprobanteNombre: 'ref_bco_ana_10928.png'
     },
     {
       id: 5,
@@ -64,9 +78,11 @@ export class CobrosService {
       alumno: 'Juan Fernando Castro',
       identificacion: '1847569231',
       concepto: 'Mensualidad Desarrollo de Software - Mayo',
-      monto: 120.00,
-      metodoPago: 'Efectivo',
-      estado: 'PENDIENTE'
+      monto: 80.00,
+      metodoPago: 'Tarjeta de Crédito',
+      estado: 'PENDIENTE',
+      tipoPago: 'ABONO',
+      sobranteDeuda: 40.00
     }
   ];
 

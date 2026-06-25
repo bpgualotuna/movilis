@@ -697,6 +697,249 @@ $r: #be123c;
 }
 
 /* ==========================================================================
+   TAB BAR STYLE
+   ========================================================================== */
+.tab-bar {
+  display: flex;
+  gap: 12px;
+  background: var(--bg-card);
+  border: 1.5px solid var(--surface);
+  padding: 6px;
+  border-radius: 12px;
+  width: max-content;
+  margin-bottom: 8px;
+
+  @media (max-width: 640px) {
+    width: 100%;
+    
+    .tab-btn {
+      flex: 1;
+      justify-content: center;
+    }
+  }
+
+  .tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: var(--text-soft);
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+
+    svg {
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+    }
+
+    &:hover {
+      color: $brand-purple;
+      background: rgba($brand-purple, 0.04);
+      
+      svg {
+        opacity: 1;
+      }
+    }
+
+    &.active {
+      background: $brand-purple;
+      color: #ffffff;
+
+      svg {
+        opacity: 1;
+      }
+      
+      &:hover {
+        background: $brand-purple-dark;
+      }
+    }
+  }
+}
+
+/* ==========================================================================
+   SEGMENT SELECTOR (TIPO DE PAGO)
+   ========================================================================== */
+.payment-type-toggle {
+  display: flex;
+  background: #f3f4f6;
+  border-radius: 8px;
+  padding: 4px;
+  border: 1px solid var(--surface);
+
+  .toggle-option {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    padding: 10px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+
+    input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    span {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-soft);
+      transition: color 0.2s ease;
+    }
+
+    &.selected {
+      background: #ffffff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+
+      span {
+        color: $brand-purple;
+      }
+    }
+
+    &:hover:not(.selected) {
+      background: rgba($brand-purple, 0.04);
+      
+      span {
+        color: $brand-purple;
+      }
+    }
+  }
+}
+
+/* ==========================================================================
+   FILE UPLOAD (COMPROBANTES)
+   ========================================================================== */
+.file-upload-wrapper {
+  position: relative;
+  width: 100%;
+
+  .file-input-hidden {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .file-upload-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 20px;
+    background: #ffffff;
+    border: 2px dashed var(--surface);
+    border-radius: 8px;
+    color: var(--text-soft);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+
+    svg {
+      color: var(--text-soft);
+      opacity: 0.8;
+      transition: transform 0.2s ease;
+    }
+
+    &:hover {
+      border-color: $brand-purple;
+      background: rgba($brand-purple, 0.02);
+      color: $brand-purple;
+
+      svg {
+        transform: translateY(-2px);
+        color: $brand-purple;
+      }
+    }
+
+    &.uploaded {
+      border-color: #10b981;
+      background: rgba(16, 185, 129, 0.02);
+      color: #0d9488;
+
+      svg {
+        color: #0d9488;
+      }
+    }
+  }
+}
+
+/* ==========================================================================
+   DYNAMIC ABONO CALCULATIONS
+   ========================================================================== */
+.abono-info-box {
+  background: rgba($brand-yellow, 0.05);
+  border: 1.5px solid rgba($brand-yellow, 0.2);
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 5px;
+  animation: fadeIn 0.3s ease-out;
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: var(--text-soft);
+
+    .value {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    &.highlight {
+      border-top: 1px dashed rgba($brand-yellow, 0.3);
+      padding-top: 8px;
+      font-weight: 700;
+      color: $brand-purple;
+
+      .value {
+        font-size: 1.1rem;
+        color: $brand-purple;
+        font-weight: 800;
+      }
+    }
+  }
+}
+
+/* ==========================================================================
+   ABONO TABLE ROW STYLING
+   ========================================================================== */
+.abono-subtext {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: #b45309;
+  font-weight: 600;
+  margin-top: 4px;
+
+  .abono-badge {
+    background: rgba(217, 119, 6, 0.1);
+    color: #b45309;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    border: 1px solid rgba(217, 119, 6, 0.2);
+  }
+}
+
+/* ==========================================================================
    ANIMATIONS
    ========================================================================== */
 @keyframes fadeIn {
