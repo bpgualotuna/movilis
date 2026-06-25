@@ -1,11 +1,10 @@
 $brand-purple: #881e80;
 $brand-purple-dark: #6b1866;
 $brand-purple-deep: #4d1149;
-$brand-yellow: #f9eb1d;
-$brand-yellow-dark: #e6d91a;
-$surface: #5a1555;
-$text-soft: #f5f0f5;
-$r: #ef4444;
+$brand-yellow: #f59e0b;
+$brand-yellow-dark: #d97706;
+$surface: #e5e7eb;
+$r: #be123c;
 
 .reportes-container {
   display: flex;
@@ -18,11 +17,11 @@ $r: #ef4444;
    HEADER STYLE
    ========================================================================== */
 .module-header {
-  border-bottom: 3px solid $brand-yellow;
+  border-bottom: 2px solid rgba($brand-purple, 0.15);
   padding-bottom: 20px;
 
   h1 {
-    color: $brand-yellow;
+    color: $brand-purple;
     font-size: 2.2rem;
     font-weight: 800;
     margin: 0;
@@ -33,7 +32,7 @@ $r: #ef4444;
     color: var(--text-soft);
     font-size: 1rem;
     margin: 8px 0 0 0;
-    opacity: 0.9;
+    opacity: 0.95;
   }
 }
 
@@ -47,14 +46,14 @@ $r: #ef4444;
 }
 
 .kpi-card {
-  background: linear-gradient(135deg, rgba($brand-purple-deep, 0.6) 0%, rgba($surface, 0.8) 100%);
-  border: 2px solid $surface;
+  background: var(--bg-card);
+  border: 1.5px solid var(--surface);
   border-radius: 16px;
   padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
   position: relative;
   overflow: hidden;
 
@@ -68,7 +67,7 @@ $r: #ef4444;
     background: transparent;
   }
 
-  &[data-kpi="dollar"]::before { background: $brand-yellow; }
+  &[data-kpi="dollar"]::before { background: $brand-purple; }
   &[data-kpi="users"]::before { background: #3b82f6; }
   &[data-kpi="percent"]::before { background: #10b981; }
   &[data-kpi="alert-triangle"]::before { background: #ef4444; }
@@ -83,7 +82,7 @@ $r: #ef4444;
     font-size: 0.85rem;
     font-weight: 700;
     color: var(--text-soft);
-    opacity: 0.8;
+    opacity: 0.95;
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
@@ -92,12 +91,12 @@ $r: #ef4444;
     width: 42px;
     height: 42px;
     border-radius: 10px;
-    background: rgba($brand-purple, 0.3);
-    color: $brand-yellow;
+    background: rgba($brand-purple, 0.06);
+    color: $brand-purple;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgba($brand-purple, 0.5);
+    border: 1px solid rgba($brand-purple, 0.15);
 
     svg {
       display: block;
@@ -124,7 +123,8 @@ $r: #ef4444;
     align-items: center;
 
     &.positive {
-      color: #a7f3d0;
+      color: #0f766e;
+      font-weight: 700;
     }
   }
 }
@@ -137,15 +137,15 @@ $r: #ef4444;
   padding: 80px 20px;
   background: var(--bg-card);
   border-radius: 16px;
-  border: 2px solid $surface;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  border: 1.5px solid var(--surface);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
   gap: 20px;
 
   .spinner {
     width: 50px;
     height: 50px;
-    border: 4px solid $surface;
-    border-top-color: $brand-yellow;
+    border: 4px solid var(--surface);
+    border-top-color: $brand-purple;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
   }
@@ -175,8 +175,8 @@ $r: #ef4444;
   background: var(--bg-card);
   border-radius: 16px;
   padding: 30px;
-  border: 2px solid $surface;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border: 1.5px solid var(--surface);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -190,18 +190,18 @@ $r: #ef4444;
   }
 
   h2 {
-    color: $brand-yellow;
+    color: $brand-purple;
     font-size: 1.4rem;
     font-weight: 700;
     margin: 0;
     padding-bottom: 12px;
-    border-bottom: 2px solid $surface;
+    border-bottom: 1.5px solid var(--surface);
   }
 
   .chart-description {
     font-size: 0.85rem;
     color: var(--text-soft);
-    opacity: 0.8;
+    opacity: 0.95;
     margin: 0 0 10px 0;
     line-height: 1.5;
   }
@@ -238,12 +238,12 @@ $r: #ef4444;
       color: var(--text-soft);
 
       small {
-        opacity: 0.8;
-        font-weight: 500;
+        opacity: 0.9;
+        font-weight: 600;
       }
 
       .danger-text {
-        color: #fca5a5;
+        color: $r;
         font-weight: 700;
       }
     }
@@ -252,9 +252,9 @@ $r: #ef4444;
   .progress-track {
     width: 100%;
     height: 12px;
-    background: rgba(0, 0, 0, 0.2);
+    background: #f3f4f6;
     border-radius: 99px;
-    border: 1px solid $surface;
+    border: 1px solid var(--surface);
     overflow: hidden;
     position: relative;
   }
@@ -266,8 +266,8 @@ $r: #ef4444;
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.1) inset;
 
     &.danger {
-      background: linear-gradient(90deg, #fca5a5 0%, #ef4444 100%) !important;
-      box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+      background: linear-gradient(90deg, #fca5a5 0%, $r 100%) !important;
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
     }
   }
 }
@@ -280,8 +280,8 @@ $r: #ef4444;
   margin-top: 30px;
   height: 280px;
   position: relative;
-  border-bottom: 2px solid $surface;
-  padding-left: 50px; /* Dejar espacio para el eje Y */
+  border-bottom: 2px solid var(--surface);
+  padding-left: 50px;
   box-sizing: border-box;
 
   @media (max-width: 480px) {
@@ -301,10 +301,10 @@ $r: #ef4444;
   justify-content: space-between;
   align-items: flex-end;
   color: var(--text-soft);
-  opacity: 0.6;
+  opacity: 0.9;
   font-size: 0.8rem;
-  font-weight: 600;
-  padding-bottom: 30px; /* Alineado con el Y-axis real */
+  font-weight: 700;
+  padding-bottom: 30px;
   box-sizing: border-box;
 
   @media (max-width: 480px) {
@@ -319,7 +319,7 @@ $r: #ef4444;
   justify-content: space-around;
   align-items: flex-end;
   height: 100%;
-  padding-bottom: 30px; /* Espacio para las etiquetas X */
+  padding-bottom: 30px;
   box-sizing: border-box;
 }
 
@@ -345,14 +345,14 @@ $r: #ef4444;
   &:hover {
     .bar-rect {
       transform: scaleX(1.05);
-      background: linear-gradient(to top, $brand-purple 0%, $brand-yellow 100%);
-      box-shadow: 0 0 15px rgba(249, 235, 29, 0.4);
+      background: linear-gradient(to top, $brand-purple-dark 0%, $brand-purple 100%);
+      box-shadow: 0 0 15px rgba(136, 30, 128, 0.2);
     }
 
     .bar-value-label {
       opacity: 1;
       transform: translateY(-4px) scale(1.1);
-      color: $brand-yellow;
+      color: $brand-purple;
     }
   }
 }
@@ -360,7 +360,7 @@ $r: #ef4444;
 .bar-value-label {
   font-size: 0.85rem;
   font-weight: 700;
-  color: var(--text-soft);
+  color: var(--text);
   margin-bottom: 6px;
   transition: all 0.2s ease;
   line-height: 1;
@@ -368,10 +368,10 @@ $r: #ef4444;
 
 .bar-rect {
   width: 36px;
-  background: linear-gradient(to top, $brand-purple-deep 0%, $brand-purple 100%);
+  background: linear-gradient(to top, rgba($brand-purple, 0.4) 0%, $brand-purple 100%);
   border-radius: 6px 6px 0 0;
   transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid $surface;
+  border: 1px solid var(--surface);
   border-bottom: none;
 
   @media (max-width: 480px) {
@@ -383,9 +383,9 @@ $r: #ef4444;
   position: absolute;
   bottom: 0;
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-soft);
-  opacity: 0.8;
+  opacity: 0.9;
   height: 20px;
   line-height: 20px;
 }

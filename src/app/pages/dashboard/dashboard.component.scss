@@ -7,6 +7,14 @@ $surface: #5a1555;
 $text-soft: #f5f0f5;
 
 .dashboard-container {
+  // --- VARIABLES TEMA CLARO (Dashboard e hijas) ---
+  --bg: #f3f4f6;          // Fondo de contenido (gris claro suave)
+  --bg-alt: #ffffff;      // Fondo alternativo/tarjetas
+  --bg-card: #ffffff;     // Fondo de contenedores principales
+  --surface: #e5e7eb;     // Bordes y separadores
+  --text: #111827;        // Texto principal oscuro
+  --text-soft: #4b5563;   // Texto secundario gris medio
+  
   display: flex;
   min-height: 100vh;
   background: var(--bg);
@@ -14,6 +22,21 @@ $text-soft: #f5f0f5;
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   overflow: hidden;
   width: 100%;
+
+  // --- RESTAURACIÓN TEMA OSCURO (Exclusivo para la Ficha de Registro existente) ---
+  app-student-form {
+    --brand-purple: #881e80;
+    --brand-purple-dark: #6b1866;
+    --brand-purple-deep: #4d1149;
+    --brand-yellow: #f9eb1d;
+    --brand-yellow-dark: #e6d91a;
+    --bg: #881e80;
+    --bg-alt: #6b1866;
+    --bg-card: #4d1149;
+    --surface: #5a1555;
+    --text: #ffffff;
+    --text-soft: #f5f0f5;
+  }
 }
 
 /* ==========================================================================
@@ -21,19 +44,19 @@ $text-soft: #f5f0f5;
    ========================================================================== */
 .sidebar {
   width: 280px;
-  background: $brand-purple-deep;
-  border-right: 2px solid $surface;
+  background: #ffffff;
+  border-right: 1.5px solid var(--surface);
   display: flex;
   flex-direction: column;
   height: 100vh;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
   flex-shrink: 0;
 
   @media (max-width: 1024px) {
-    display: none; /* Ocultar sidebar en pantallas medianas y pequeñas */
+    display: none;
   }
 }
 
@@ -42,7 +65,7 @@ $text-soft: #f5f0f5;
   display: flex;
   align-items: center;
   gap: 15px;
-  border-bottom: 2px solid $surface;
+  border-bottom: 1.5px solid var(--surface);
 
   .logo {
     height: 50px;
@@ -55,7 +78,7 @@ $text-soft: #f5f0f5;
     flex-direction: column;
 
     .brand-name {
-      color: $brand-yellow;
+      color: $brand-purple;
       font-size: 1.4rem;
       font-weight: 800;
       letter-spacing: -0.5px;
@@ -65,8 +88,8 @@ $text-soft: #f5f0f5;
     .brand-tagline {
       color: var(--text-soft);
       font-size: 0.75rem;
-      opacity: 0.8;
-      font-weight: 500;
+      opacity: 0.9;
+      font-weight: 600;
     }
   }
 }
@@ -101,34 +124,39 @@ $text-soft: #f5f0f5;
     .nav-icon {
       transition: all 0.25s ease;
       color: var(--text-soft);
-      opacity: 0.7;
+      opacity: 0.8;
     }
 
     &:hover {
-      background: rgba($brand-purple, 0.25);
-      border-color: rgba($brand-purple, 0.4);
-      color: var(--text);
+      background: rgba($brand-purple, 0.08);
+      border-color: rgba($brand-purple, 0.15);
+      color: $brand-purple;
       transform: translateX(4px);
 
       .nav-icon {
-        color: $brand-yellow;
+        color: $brand-purple;
         opacity: 1;
       }
     }
 
     &.active {
-      background: $brand-yellow;
-      color: $brand-purple-deep;
-      border-color: $brand-yellow;
-      box-shadow: 0 4px 15px rgba(249, 235, 29, 0.25);
+      background: $brand-purple;
+      color: #ffffff;
+      border-color: $brand-purple;
+      box-shadow: 0 4px 12px rgba(136, 30, 128, 0.2);
 
       .nav-icon {
-        color: $brand-purple-deep;
+        color: #ffffff;
         opacity: 1;
       }
 
       &:hover {
         transform: none;
+        color: #ffffff;
+        background: $brand-purple;
+        .nav-icon {
+          color: #ffffff;
+        }
       }
     }
   }
@@ -136,18 +164,18 @@ $text-soft: #f5f0f5;
 
 .sidebar-footer {
   padding: 24px;
-  border-top: 2px solid $surface;
+  border-top: 1.5px solid var(--surface);
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgba(0, 0, 0, 0.15);
+  background: #fafafa;
 
   .developer-label {
     font-size: 0.7rem;
     color: var(--text-soft);
-    opacity: 0.7;
+    opacity: 0.8;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.05px;
     margin-bottom: 8px;
   }
 
@@ -161,7 +189,7 @@ $text-soft: #f5f0f5;
   .copyright {
     font-size: 0.75rem;
     color: var(--text-soft);
-    opacity: 0.6;
+    opacity: 0.8;
   }
 }
 
@@ -170,13 +198,13 @@ $text-soft: #f5f0f5;
    ========================================================================== */
 .mobile-navbar {
   display: none;
-  background: $brand-purple;
+  background: #ffffff;
   height: 70px;
   padding: 0 20px;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 3px solid $brand-yellow;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  border-bottom: 2px solid var(--surface);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   position: fixed;
   top: 0;
   left: 0;
@@ -190,7 +218,7 @@ $text-soft: #f5f0f5;
   .menu-toggle {
     background: transparent;
     border: none;
-    color: var(--text);
+    color: $brand-purple;
     cursor: pointer;
     padding: 8px;
     display: flex;
@@ -200,7 +228,7 @@ $text-soft: #f5f0f5;
     transition: background 0.2s ease;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba($brand-purple, 0.08);
     }
   }
 
@@ -217,7 +245,7 @@ $text-soft: #f5f0f5;
     .mobile-title {
       font-size: 1.2rem;
       font-weight: 800;
-      color: $brand-yellow;
+      color: $brand-purple;
       letter-spacing: -0.5px;
     }
   }
@@ -230,7 +258,7 @@ $text-soft: #f5f0f5;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.4);
   z-index: 1000;
   opacity: 0;
   pointer-events: none;
@@ -249,13 +277,14 @@ $text-soft: #f5f0f5;
   left: 0;
   bottom: 0;
   width: 280px;
-  background: $brand-purple-deep;
+  background: #ffffff;
   z-index: 1001;
-  box-shadow: 6px 0 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 6px 0 20px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
   transform: translateX(-100%);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-right: 1.5px solid var(--surface);
 
   &.open {
     transform: translateX(0);
@@ -266,7 +295,7 @@ $text-soft: #f5f0f5;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 2px solid $surface;
+    border-bottom: 1.5px solid var(--surface);
 
     .logo {
       height: 45px;
@@ -276,7 +305,7 @@ $text-soft: #f5f0f5;
     .close-btn {
       background: transparent;
       border: none;
-      color: var(--text);
+      color: $brand-purple;
       cursor: pointer;
       padding: 6px;
       border-radius: 50%;
@@ -285,7 +314,7 @@ $text-soft: #f5f0f5;
       justify-content: center;
 
       &:hover {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba($brand-purple, 0.08);
       }
     }
   }
@@ -318,25 +347,25 @@ $text-soft: #f5f0f5;
 
       .nav-icon {
         color: var(--text-soft);
-        opacity: 0.7;
+        opacity: 0.8;
       }
 
       &:hover {
-        background: rgba($brand-purple, 0.25);
-        color: var(--text);
+        background: rgba($brand-purple, 0.08);
+        color: $brand-purple;
 
         .nav-icon {
-          color: $brand-yellow;
+          color: $brand-purple;
           opacity: 1;
         }
       }
 
       &.active {
-        background: $brand-yellow;
-        color: $brand-purple-deep;
+        background: $brand-purple;
+        color: #ffffff;
 
         .nav-icon {
-          color: $brand-purple-deep;
+          color: #ffffff;
           opacity: 1;
         }
       }
@@ -345,16 +374,16 @@ $text-soft: #f5f0f5;
 
   .drawer-footer {
     padding: 20px;
-    border-top: 2px solid $surface;
+    border-top: 1.5px solid var(--surface);
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: rgba(0, 0, 0, 0.15);
+    background: #fafafa;
 
     .developer-label {
       font-size: 0.65rem;
       color: var(--text-soft);
-      opacity: 0.7;
+      opacity: 0.8;
       margin-bottom: 6px;
     }
 
@@ -366,10 +395,12 @@ $text-soft: #f5f0f5;
     .copyright {
       font-size: 0.7rem;
       color: var(--text-soft);
-      opacity: 0.6;
+      opacity: 0.8;
     }
   }
 }
+
+
 
 /* ==========================================================================
    MAIN CONTENT AREA
