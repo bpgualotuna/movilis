@@ -385,6 +385,24 @@ $r: #be123c;
   flex-direction: column;
   gap: 20px;
 
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .grid-span-2 {
+    grid-column: span 2 !important;
+
+    @media (max-width: 640px) {
+      grid-column: span 1 !important;
+    }
+  }
+
   .form-group {
     display: flex;
     flex-direction: column;

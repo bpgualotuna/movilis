@@ -155,182 +155,184 @@
     @if (activeTab === 'registro') {
       <section class="module-card form-card">
         <div class="card-header-bar">
-          <h2>Registrar Nuevo Pago</h2>
+          <h2>Registrar Pago</h2>
         </div>
 
         <form [formGroup]="pagoForm" (ngSubmit)="onSubmit()" class="premium-form">
-          <!-- BUSCAR ALUMNO (Con Autocompletado) -->
-          <div class="form-group autocomplete-container">
-            <label>Buscar Alumno <span class="required">*</span></label>
-            <div class="input-icon-wrapper">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"/>
-                <line x1="21" x2="16.65" y1="21" y2="16.65"/>
-              </svg>
+          <div class="form-grid">
+            <!-- BUSCAR ALUMNO (Con Autocompletado) -->
+            <div class="form-group autocomplete-container">
+              <label>Buscar Alumno <span class="required">*</span></label>
+              <div class="input-icon-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"/>
+                  <line x1="21" x2="16.65" y1="21" y2="16.65"/>
+                </svg>
+                <input 
+                  type="text" 
+                  formControlName="alumno" 
+                  placeholder="Escribe el nombre del alumno..."
+                  (input)="onAlumnoInputChange($event)"
+                  [class.error]="hasError('alumno', 'required')"
+                />
+              </div>
+              <!-- Desplegable Autocomplete -->
+              @if (showAutocomplete && alumnosSugeridos.length > 0) {
+                <ul class="autocomplete-dropdown">
+                  @for (sug of alumnosSugeridos; track sug) {
+                    <li (click)="seleccionarAlumno(sug)">{{ sug }}</li>
+                  }
+                </ul>
+              }
+              <small class="error-message" *ngIf="hasError('alumno', 'required')">
+                El nombre del alumno es obligatorio.
+              </small>
+            </div>
+
+            <!-- CÉDULA / IDENTIFICACIÓN -->
+            <div class="form-group">
+              <label>Cédula o RUC <span class="required">*</span></label>
               <input 
                 type="text" 
-                formControlName="alumno" 
-                placeholder="Escribe el nombre del alumno..."
-                (input)="onAlumnoInputChange($event)"
-                [class.error]="hasError('alumno', 'required')"
+                formControlName="identificacion" 
+                placeholder="Ej. 1723456789"
+                [class.error]="hasError('identificacion', 'required') || hasError('identificacion', 'pattern')"
               />
+              <small class="error-message" *ngIf="hasError('identificacion', 'required')">
+                El número de identificación es obligatorio.
+              </small>
+              <small class="error-message" *ngIf="hasError('identificacion', 'pattern')">
+                Debe ser un número válido de 10 dígitos (Cédula) o 13 dígitos (RUC).
+              </small>
             </div>
-            <!-- Desplegable Autocomplete -->
-            @if (showAutocomplete && alumnosSugeridos.length > 0) {
-              <ul class="autocomplete-dropdown">
-                @for (sug of alumnosSugeridos; track sug) {
-                  <li (click)="seleccionarAlumno(sug)">{{ sug }}</li>
-                }
-              </ul>
+
+            <!-- CONCEPTO -->
+            <div class="form-group">
+              <label>Concepto de Pago <span class="required">*</span></label>
+              <div class="select-wrapper">
+                <select formControlName="concepto" [class.error]="hasError('concepto', 'required')">
+                  <option value="">Seleccione un concepto...</option>
+                  <option value="Matrícula de Desarrollo de Software">Matrícula - Desarrollo de Software ($150.00)</option>
+                  <option value="Matrícula de Estética">Matrícula - Estética ($120.00)</option>
+                  <option value="Matrícula de Transporte">Matrícula - Transporte ($150.00)</option>
+                  <option value="Mensualidad Desarrollo de Software - Mayo">Mensualidad - Software Mayo ($120.00)</option>
+                  <option value="Mensualidad Estética - Mayo">Mensualidad - Estética Mayo ($85.00)</option>
+                  <option value="Derechos de Examen">Derechos de Examen ($45.00)</option>
+                  <option value="Derechos de Certificación">Derechos de Certificación ($30.00)</option>
+                </select>
+              </div>
+              <small class="error-message" *ngIf="hasError('concepto', 'required')">
+                El concepto de pago es obligatorio.
+              </small>
+            </div>
+
+            <!-- TIPO DE PAGO -->
+            <div class="form-group">
+              <label>Tipo de Pago <span class="required">*</span></label>
+              <div class="select-wrapper">
+                <select formControlName="tipoPago" [class.error]="hasError('tipoPago', 'required')">
+                  <option value="TOTAL">Pago Total</option>
+                  <option value="ABONO">Abono / Pago Parcial</option>
+                </select>
+              </div>
+              <small class="error-message" *ngIf="hasError('tipoPago', 'required')">
+                El tipo de pago es obligatorio.
+              </small>
+            </div>
+
+            <!-- MONTO ($) -->
+            <div class="form-group grid-span-2">
+              <label>Monto a Pagar ($ USD) <span class="required">*</span></label>
+              <div class="input-prefix-wrapper">
+                <span class="prefix">$</span>
+                <input 
+                  type="number" 
+                  step="0.01" 
+                  formControlName="monto" 
+                  placeholder="0.00"
+                  [class.error]="hasError('monto', 'required') || hasError('monto', 'min')"
+                />
+              </div>
+              <small class="error-message" *ngIf="hasError('monto', 'required')">
+                El monto de pago es obligatorio.
+              </small>
+              <small class="error-message" *ngIf="hasError('monto', 'min')">
+                El monto debe ser mayor a cero.
+              </small>
+
+              <!-- DEUDA SOBRANTE (Si es Abono) -->
+              @if (pagoForm.get('tipoPago')?.value === 'ABONO' && costoTotalConcepto > 0) {
+                <div class="abono-info-box">
+                  <div class="info-row">
+                    <span>Costo Total:</span>
+                    <span class="value">{{ costoTotalConcepto | currency }}</span>
+                  </div>
+                  <div class="info-row">
+                    <span>Monto Abonado:</span>
+                    <span class="value">{{ (pagoForm.getRawValue().monto || 0) | currency }}</span>
+                  </div>
+                  <div class="info-row highlight">
+                    <span>Saldo Restante:</span>
+                    <span class="value">{{ sobranteDeuda | currency }}</span>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <!-- MÉTODO DE PAGO -->
+            <div class="form-group" [class.grid-span-2]="pagoForm.get('metodoPago')?.value !== 'Transferencia Bancaria'">
+              <label>Método de Pago <span class="required">*</span></label>
+              <div class="select-wrapper">
+                <select formControlName="metodoPago" [class.error]="hasError('metodoPago', 'required')">
+                  <option value="">Seleccione el método...</option>
+                  <option value="Transferencia Bancaria">Transferencia Bancaria</option>
+                  <option value="Tarjeta de Crédito">Tarjeta de Crédito</option>
+                  <option value="Efectivo">Efectivo</option>
+                </select>
+              </div>
+              <small class="error-message" *ngIf="hasError('metodoPago', 'required')">
+                El método de pago es obligatorio.
+              </small>
+            </div>
+
+            <!-- COMPROBANTE DE PAGO (Solo si es Transferencia Bancaria) -->
+            @if (pagoForm.get('metodoPago')?.value === 'Transferencia Bancaria') {
+              <div class="form-group">
+                <label>Comprobante de Transferencia <span class="required">*</span></label>
+                <div class="file-upload-wrapper">
+                  <input 
+                    type="file" 
+                    id="comprobante-input" 
+                    (change)="onFileChange($event)" 
+                    accept="image/*,application/pdf"
+                    class="file-input-hidden"
+                  />
+                  <label for="comprobante-input" class="file-upload-btn" [class.uploaded]="fileName">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="17 8 12 3 7 8"/>
+                      <line x1="12" x2="12" y1="3" y2="15"/>
+                    </svg>
+                    <span>{{ fileName || 'Subir Comprobante (Imagen o PDF)' }}</span>
+                  </label>
+                </div>
+                <small class="error-message" *ngIf="hasError('comprobante', 'required')">
+                  El comprobante de transferencia es obligatorio.
+                </small>
+              </div>
             }
-            <small class="error-message" *ngIf="hasError('alumno', 'required')">
-              El nombre del alumno es obligatorio.
-            </small>
+
+            <!-- BOTÓN ENVIAR -->
+            <button 
+              type="submit" 
+              class="btn-submit grid-span-2" 
+              [disabled]="isSubmitting"
+              [class.loading]="isSubmitting"
+            >
+              <span *ngIf="!isSubmitting">Registrar Transacción</span>
+              <span *ngIf="isSubmitting">Procesando Pago...</span>
+            </button>
           </div>
-
-          <!-- CÉDULA / IDENTIFICACIÓN -->
-          <div class="form-group">
-            <label>Cédula o RUC <span class="required">*</span></label>
-            <input 
-              type="text" 
-              formControlName="identificacion" 
-              placeholder="Ej. 1723456789"
-              [class.error]="hasError('identificacion', 'required') || hasError('identificacion', 'pattern')"
-            />
-            <small class="error-message" *ngIf="hasError('identificacion', 'required')">
-              El número de identificación es obligatorio.
-            </small>
-            <small class="error-message" *ngIf="hasError('identificacion', 'pattern')">
-              Debe ser un número válido de 10 dígitos (Cédula) o 13 dígitos (RUC).
-            </small>
-          </div>
-
-          <!-- CONCEPTO -->
-          <div class="form-group">
-            <label>Concepto de Pago <span class="required">*</span></label>
-            <div class="select-wrapper">
-              <select formControlName="concepto" [class.error]="hasError('concepto', 'required')">
-                <option value="">Seleccione un concepto...</option>
-                <option value="Matrícula de Desarrollo de Software">Matrícula - Desarrollo de Software ($150.00)</option>
-                <option value="Matrícula de Estética">Matrícula - Estética ($120.00)</option>
-                <option value="Matrícula de Transporte">Matrícula - Transporte ($150.00)</option>
-                <option value="Mensualidad Desarrollo de Software - Mayo">Mensualidad - Software Mayo ($120.00)</option>
-                <option value="Mensualidad Estética - Mayo">Mensualidad - Estética Mayo ($85.00)</option>
-                <option value="Derechos de Examen">Derechos de Examen ($45.00)</option>
-                <option value="Derechos de Certificación">Derechos de Certificación ($30.00)</option>
-              </select>
-            </div>
-            <small class="error-message" *ngIf="hasError('concepto', 'required')">
-            El concepto de pago es obligatorio.
-          </small>
-        </div>
-
-        <!-- TIPO DE PAGO -->
-        <div class="form-group">
-          <label>Tipo de Pago <span class="required">*</span></label>
-          <div class="payment-type-toggle">
-            <label class="toggle-option" [class.selected]="pagoForm.get('tipoPago')?.value === 'TOTAL'">
-              <input type="radio" formControlName="tipoPago" value="TOTAL" />
-              <span>Pago Total</span>
-            </label>
-            <label class="toggle-option" [class.selected]="pagoForm.get('tipoPago')?.value === 'ABONO'">
-              <input type="radio" formControlName="tipoPago" value="ABONO" />
-              <span>Abono / Parcial</span>
-            </label>
-          </div>
-        </div>
-
-          <!-- MONTO ($) -->
-        <div class="form-group">
-          <label>Monto a Pagar ($ USD) <span class="required">*</span></label>
-          <div class="input-prefix-wrapper">
-            <span class="prefix">$</span>
-            <input 
-              type="number" 
-              step="0.01" 
-              formControlName="monto" 
-              placeholder="0.00"
-              [class.error]="hasError('monto', 'required') || hasError('monto', 'min')"
-            />
-          </div>
-          <small class="error-message" *ngIf="hasError('monto', 'required')">
-            El monto de pago es obligatorio.
-          </small>
-          <small class="error-message" *ngIf="hasError('monto', 'min')">
-            El monto debe ser mayor a cero.
-          </small>
-        </div>
-
-        <!-- DEUDA SOBRANTE (Si es Abono) -->
-        @if (pagoForm.get('tipoPago')?.value === 'ABONO' && costoTotalConcepto > 0) {
-          <div class="abono-info-box">
-            <div class="info-row">
-              <span>Costo Total:</span>
-              <span class="value">{{ costoTotalConcepto | currency }}</span>
-            </div>
-            <div class="info-row">
-              <span>Monto Abonado:</span>
-              <span class="value">{{ (pagoForm.getRawValue().monto || 0) | currency }}</span>
-            </div>
-            <div class="info-row highlight">
-              <span>Saldo Restante:</span>
-              <span class="value">{{ sobranteDeuda | currency }}</span>
-            </div>
-          </div>
-        }
-
-          <!-- MÉTODO DE PAGO -->
-        <div class="form-group">
-          <label>Método de Pago <span class="required">*</span></label>
-          <div class="select-wrapper">
-            <select formControlName="metodoPago" [class.error]="hasError('metodoPago', 'required')">
-              <option value="">Seleccione el método...</option>
-              <option value="Transferencia Bancaria">Transferencia Bancaria</option>
-              <option value="Tarjeta de Crédito">Tarjeta de Crédito</option>
-            </select>
-          </div>
-          <small class="error-message" *ngIf="hasError('metodoPago', 'required')">
-            El método de pago es obligatorio.
-          </small>
-        </div>
-
-        <!-- COMPROBANTE DE PAGO (Solo si es Transferencia Bancaria) -->
-        @if (pagoForm.get('metodoPago')?.value === 'Transferencia Bancaria') {
-          <div class="form-group">
-            <label>Comprobante de Transferencia <span class="required">*</span></label>
-            <div class="file-upload-wrapper">
-              <input 
-                type="file" 
-                id="comprobante-input" 
-                (change)="onFileChange($event)" 
-                accept="image/*,application/pdf"
-                class="file-input-hidden"
-              />
-              <label for="comprobante-input" class="file-upload-btn" [class.uploaded]="fileName">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                  <polyline points="17 8 12 3 7 8"/>
-                  <line x1="12" x2="12" y1="3" y2="15"/>
-                </svg>
-                <span>{{ fileName || 'Subir Comprobante (Imagen o PDF)' }}</span>
-              </label>
-            </div>
-            <small class="error-message" *ngIf="hasError('comprobante', 'required')">
-              El comprobante de transferencia es obligatorio.
-            </small>
-          </div>
-        }
-
-          <!-- BOTÓN ENVIAR -->
-          <button 
-            type="submit" 
-            class="btn-submit" 
-            [disabled]="isSubmitting"
-            [class.loading]="isSubmitting"
-          >
-            <span *ngIf="!isSubmitting">Registrar Transacción</span>
-            <span *ngIf="isSubmitting">Procesando Pago...</span>
-          </button>
         </form>
       </section>
     }
